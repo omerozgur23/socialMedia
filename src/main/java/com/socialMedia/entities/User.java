@@ -1,10 +1,14 @@
 package com.socialMedia.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -31,13 +35,13 @@ public class User implements Serializable {
 
 	private String email;
 
-	private String userName;
+	private String username;
 
 	private String name;
 
 	private String profilePhoto;
 
-	private String birthDate;
+	private LocalDate birthDate;
 
 	private String password;
 
@@ -45,10 +49,11 @@ public class User implements Serializable {
 
 	private boolean isProAccount;
 
-	private String createdDate;
+	private LocalDateTime createdDate;
 
-	private String deletedDate;
+	private LocalDateTime deletedDate;
 
+	@Enumerated(EnumType.STRING)
 	private Status status;
 
 	@OneToMany(mappedBy = "user")
@@ -73,7 +78,7 @@ public class User implements Serializable {
 	private List<Message> recipientMessages;
 
 	@ManyToMany
-	@JoinTable(name = "follower", joinColumns = { @JoinColumn(name = "following_user_id") }, inverseJoinColumns = {
+	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "following_user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "follower_user_id") })
 	private List<User> followings;
 
