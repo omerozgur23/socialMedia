@@ -30,11 +30,9 @@ public class Tweet {
 	private String text;
 
 	@OneToMany(mappedBy = "tweet")
-//	@JoinColumn(name = "image_path_id")
 	private List<TweetImage> tweetImages;
 
 	@OneToMany(mappedBy = "tweet")
-//	@JoinColumn(name = "video_path_id")
 	private List<TweetVideo> tweetVideos;
 
 	private String voicePath;

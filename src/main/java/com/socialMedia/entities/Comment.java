@@ -26,10 +26,14 @@ public class Comment {
 	@GeneratedValue
 	private UUID id;
 
+	private String comment;
+
 	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
+	@JoinColumn(name = "tweet_id")
 	private Tweet tweet;
 
 	private String createDate;
