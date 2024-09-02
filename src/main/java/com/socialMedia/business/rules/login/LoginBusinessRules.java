@@ -1,5 +1,7 @@
 package com.socialMedia.business.rules.login;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,4 +34,13 @@ public class LoginBusinessRules {
 			userRepository.save(user);
 		}
 	}
+
+	public Optional<User> isUserExist(String email) {
+		Optional<User> user = userRepository.findByEmail(email);
+		if (user.isEmpty()) {
+			throw new BusinessException(Messages.USER_NOT_FOUND);
+		}
+		return user;
+	}
+
 }
