@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.SignUpService;
-import com.socialMedia.business.rules.user.UserBusinessRules;
+import com.socialMedia.business.rules.signUp.SignUpBusinessRules;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.dataAccess.UserRepository;
 import com.socialMedia.dtos.signUp.SignUpRequest;
@@ -21,7 +21,7 @@ public class SignUpManager implements SignUpService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private UserBusinessRules userBusinessRules;
+	private SignUpBusinessRules signUpBusinessRules;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -31,12 +31,12 @@ public class SignUpManager implements SignUpService {
 
 	@Override
 	public User signUp(SignUpRequest request) {
-		userBusinessRules.checkIfEmailExist(request.getEmail());
-		userBusinessRules.checkIfUsernameExists(request.getUsername());
+		signUpBusinessRules.checkIfEmailExist(request.getEmail());
+		signUpBusinessRules.checkIfUsernameExists(request.getUsername());
 
 		User user = modelMapper.forRequest().map(request, User.class);
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
-		user.setBirthDate(userBusinessRules.formatterDate(request.getBirthDate()));
+		user.setBirthDate(signUpBusinessRules.formatterDate(request.getBirthDate()));
 		user.setCreatedDate(LocalDateTime.now());
 		user.setStatus(Status.ACTIVE);
 		user.setProAccount(false);
