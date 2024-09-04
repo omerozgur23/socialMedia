@@ -12,7 +12,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.socialMedia.business.abstracts.TweetImagesService;
+import com.socialMedia.business.abstracts.TweetService;
+import com.socialMedia.business.abstracts.TweetVideosService;
 import com.socialMedia.business.abstracts.UserService;
+import com.socialMedia.business.abstracts.UserTweetService;
 import com.socialMedia.business.rules.user.UserBusinessRules;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
@@ -41,6 +45,18 @@ public class UserManager implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private UserTweetService userTweetService;
+
+	@Autowired
+	private TweetImagesService tweetImagesService;
+
+	@Autowired
+	private TweetVideosService tweetVideosService;
+
+	@Autowired
+	private TweetService tweetService;
 
 	@Override
 	public PageResponse<GetAllUserResponse> getAll() {
@@ -82,9 +98,18 @@ public class UserManager implements UserService {
 
 	@Transactional
 	@Override
-	@Scheduled(cron = "0 0 0 1 * ?")
+	@Scheduled(cron = "1 * * * * ?")
 	public void hardDelete() {
-		LocalDateTime cutOffTime = LocalDateTime.now().minusDays(32);
+//		String authenticationEmail = AuthenticatedUser.getCurrentUser();
+//		System.out.println("Authentication User Email: " + authenticationEmail);
+//		User currentUser = userBusinessRules.getCurrentUser(authenticationEmail);
+		List<UUID> userTweetsId = userTweetService.delete();
+
+		tweetImagesService.delete(userTweetsId);
+		tweetVideosService.delete(userTweetsId);
+		tweetService.hardDelete(userTweetsId);
+
+		LocalDateTime cutOffTime = LocalDateTime.now().minusMinutes(1);
 		userRepository.hardDelete(cutOffTime);
 	}
 

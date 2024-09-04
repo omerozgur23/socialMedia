@@ -2,7 +2,6 @@ package com.socialMedia.business.rules.user;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,30 +22,22 @@ public class UserBusinessRules {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public void checkEmailExistsForUpdate(UUID id, String email) {
+	public void checkEmailExistsForUpdate(UUID currentUserId, String email) {
+		userRepository.findById(currentUserId).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
 
-		Optional<User> currentUser = userRepository.findById(id);
-
-		if (currentUser.isPresent()) {
-			Optional<User> user = userRepository.findByEmail(email).filter(u -> !u.getId().equals(id));
-			if (user.isPresent())
-				throw new BusinessException(Messages.USER_EMAIL_ALREADY_EXISTS);
-		} else {
-			throw new BusinessException(Messages.USER_NOT_FOUND);
-		}
+		userRepository.findByEmail(email).filter(user -> !user.getId().equals(currentUserId)).ifPresent(user -> {
+			throw new BusinessException(Messages.USER_EMAIL_ALREADY_EXISTS);
+		});
+		;
 	}
 
-	public void checkUsernameExists(UUID id, String username) {
+	public void checkUsernameExists(UUID currentUserId, String username) {
+		userRepository.findById(currentUserId).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
 
-		Optional<User> currentUser = userRepository.findById(id);
-
-		if (currentUser.isPresent()) {
-			Optional<User> user = userRepository.findByUsername(username).filter(u -> !u.getId().equals(id));
-			if (user.isPresent())
-				throw new BusinessException(Messages.USER_USERNAME_ALREADY_EXISTS);
-		} else {
-			throw new BusinessException(Messages.USER_NOT_FOUND);
-		}
+		userRepository.findByUsername(username).filter(user -> !user.getId().equals(currentUserId)).ifPresent(user -> {
+			throw new BusinessException(Messages.USER_EMAIL_ALREADY_EXISTS);
+		});
+		;
 	}
 
 	public void checkOldPasswordIsMatch(User user, String oldPassword) {
@@ -61,12 +52,13 @@ public class UserBusinessRules {
 	}
 
 	public User checkAuthUserEmailMatch(String authenticatedEmail) {
-		Optional<User> currentUser = userRepository.findByEmail(authenticatedEmail);
-		if (currentUser.isPresent())
-			return currentUser.get();
-		else {
-			throw new BusinessException(Messages.AUTHENTICATED_USER_NOT_FOUND);
-		}
+		return userRepository.findByEmail(authenticatedEmail)
+				.orElseThrow(() -> new BusinessException(Messages.AUTHENTICATED_USER_NOT_FOUND));
+	}
+
+	public User getCurrentUser(String currentUserEmail) {
+		return userRepository.findByEmail(currentUserEmail)
+				.orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
 	}
 
 }

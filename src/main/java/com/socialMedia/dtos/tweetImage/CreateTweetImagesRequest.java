@@ -1,6 +1,4 @@
-package com.socialMedia.dtos.tweet;
-
-import java.util.UUID;
+package com.socialMedia.dtos.tweetImage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateTweetImagesRequest {
-
-	private UUID tweetId;
 
 	private String imagePath;
 }
