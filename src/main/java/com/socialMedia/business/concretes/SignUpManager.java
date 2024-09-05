@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.SignUpService;
 import com.socialMedia.business.rules.signUp.SignUpBusinessRules;
+import com.socialMedia.core.utilities.config.jwt.JwtConfig;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.dataAccess.UserRepository;
 import com.socialMedia.dtos.signUp.SignUpRequest;
@@ -29,6 +30,9 @@ public class SignUpManager implements SignUpService {
 	@Autowired
 	private ModelMapperService modelMapper;
 
+	@Autowired
+	private JwtConfig jwtConfig;
+
 	@Override
 	public User signUp(SignUpRequest request) {
 		signUpBusinessRules.checkIfEmailExist(request.getEmail());
@@ -41,6 +45,8 @@ public class SignUpManager implements SignUpService {
 		user.setStatus(Status.ACTIVE);
 		user.setProAccount(false);
 		userRepository.save(user);
+
+		jwtConfig.generateAuthToken(user);
 		return user;
 	}
 
