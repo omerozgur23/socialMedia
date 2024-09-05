@@ -29,6 +29,7 @@ public class Survey {
 	@JoinColumn(name = "creator_user_id")
 	private User creatorUser;
 
+//	deneme 
 	@ManyToOne
 	@JoinColumn(name = "evaluating_user_id")
 	private User evaluatingUser;
