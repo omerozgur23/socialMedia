@@ -1,5 +1,6 @@
 package com.socialMedia.entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,9 +38,9 @@ public class Tweet {
 
 	private String voicePath;
 
-	private String createdDate;
+	private LocalDateTime createdDate;
 
-	private String deletedDate;
+	private LocalDateTime deletedDate;
 
 	@OneToOne(mappedBy = "tweet")
 	private UserTweet userTweet;
