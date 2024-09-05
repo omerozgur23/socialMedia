@@ -22,7 +22,8 @@ public record Messages() {
 	public static final String TWEET_NOT_FOUND = "Tweet not found with ID: ";
 	public static final String TWEET_IMAGE_ID_NOT_FOUND = "Tweet Image not found with ID: ";
 	public static final String TWEET_VIDEO_ID_NOT_FOUND = "Tweet Video not found with ID: ";
-	public static final String TWEET_VIDEO_NOT_FOUND_WITH_TWEETID = "Tweet Video not found with tweet ID: ";
+	public static final String TWEET_IMAGE_NOT_FOUND_WITH_TWEET_ID = "Tweet Image not found with tweet ID: ";
+	public static final String TWEET_VIDEO_NOT_FOUND_WITH_TWEET_ID = "Tweet Video not found with tweet ID: ";
 
 	// User Tweet Messages
 	public static final String USER_TWEET_NOT_FOUND = "User tweet not found";

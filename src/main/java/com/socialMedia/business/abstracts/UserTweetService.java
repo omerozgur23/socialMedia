@@ -13,7 +13,7 @@ public interface UserTweetService {
 
 	void userTweetAdd(User user, Tweet tweet);
 
-	List<UserTweet> getUserTweet(UUID userId);
+	List<UserTweet> getUserTweets(List<UUID> usersId);
 
-	List<UUID> delete();
+	List<UUID> delete(List<UUID> usersId);
 }

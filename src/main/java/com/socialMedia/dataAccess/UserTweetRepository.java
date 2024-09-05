@@ -16,5 +16,5 @@ public interface UserTweetRepository extends JpaRepository<UserTweet, UUID> {
 
 	Optional<UserTweet> findByTweetId(UUID tweetId);
 
-	Optional<List<UserTweet>> findByUserId(UUID userId);
+	Optional<List<UserTweet>> findByUserIdIn(List<UUID> usersId);
 }

@@ -1,6 +1,7 @@
 package com.socialMedia.dataAccess;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,6 +19,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	Optional<User> findByEmail(String email);
 
 	Optional<User> findByUsername(String username);
+
+	@Query("SELECT u.id FROM User u WHERE u.status != Status.ACTIVE AND u.deletedDate <= :timeStamp")
+	List<UUID> findByStatus(@Param("timeStamp") LocalDateTime timeStamp);
 
 	@Modifying
 	@Query("DELETE FROM User u WHERE u.status != Status.ACTIVE AND u.deletedDate <= :timeStamp")
