@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//@SuperBuilder
 @Table(name = "users")
 public class User implements Serializable {
 
@@ -52,6 +54,9 @@ public class User implements Serializable {
 	private LocalDateTime createdDate;
 
 	private LocalDateTime deletedDate;
+
+	@Column(name = "is_active")
+	private boolean isEnabled = false;
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
@@ -90,5 +95,15 @@ public class User implements Serializable {
 
 	@OneToMany(mappedBy = "evaluatingUser")
 	private List<Survey> evaluatingUsers;
+
+//	@Override
+//	public Collection<? extends GrantedAuthority> getAuthorities() {
+//		return List.of(new SimpleGrantedAuthority(this.username));
+//	}
+//
+//	@Override
+//	public String getUsername() {
+//		return this.username;
+//	}
 
 }

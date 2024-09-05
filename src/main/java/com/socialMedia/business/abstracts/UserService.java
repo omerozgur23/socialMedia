@@ -21,4 +21,6 @@ public interface UserService {
 	void changePassword(ChangePasswordRequest request, String email);
 
 	User getUser(UUID id);
+
+	String validateToken(String token);
 }

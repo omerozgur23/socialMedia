@@ -2,6 +2,7 @@ package com.socialMedia.business.concretes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import com.socialMedia.business.rules.user.UserBusinessRules;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
+import com.socialMedia.dataAccess.TokenRepository;
 import com.socialMedia.dataAccess.UserRepository;
 import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
@@ -28,6 +30,7 @@ import com.socialMedia.dtos.user.GetAllUserResponse;
 import com.socialMedia.dtos.user.UpdateUserRequest;
 import com.socialMedia.entities.Status;
 import com.socialMedia.entities.User;
+import com.socialMedia.entities.VerificationToken;
 
 import jakarta.transaction.Transactional;
 
@@ -57,6 +60,9 @@ public class UserManager implements UserService {
 
 	@Autowired
 	private TweetService tweetService;
+
+	@Autowired
+	private TokenRepository tokenRepository;
 
 	@Override
 	public PageResponse<GetAllUserResponse> getAll() {
@@ -123,6 +129,27 @@ public class UserManager implements UserService {
 	@Override
 	public User getUser(UUID id) {
 		return userRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
+	}
+
+	@Override
+	public String validateToken(String theToken) {
+		VerificationToken token = tokenRepository.findByToken(theToken);
+		if (token == null) {
+			return "Invalid verification token!";
+		}
+
+		User user = token.getUser();
+		Calendar calendar = Calendar.getInstance();
+
+		if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
+			tokenRepository.delete(token);
+
+			return "Token has already expired!";
+		}
+
+		user.setEnabled(true);
+		userRepository.save(user);
+		return "valid";
 	}
 
 }
