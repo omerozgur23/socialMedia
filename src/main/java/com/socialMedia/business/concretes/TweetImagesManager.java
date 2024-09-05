@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.TweetImagesService;
+import com.socialMedia.business.rules.tweetImage.TweetImageBusinessRules;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
@@ -22,6 +23,9 @@ public class TweetImagesManager implements TweetImagesService {
 
 	@Autowired
 	private TweetImageRepository tweetImageRepository;
+
+	@Autowired
+	private TweetImageBusinessRules tweetImageBusinessRules;
 
 	@Autowired
 	private ModelMapperService modelMapper;
@@ -50,15 +54,14 @@ public class TweetImagesManager implements TweetImagesService {
 	}
 
 	@Override
-	public TweetImage getTweetImages(UUID id) {
-		return tweetImageRepository.findById(id)
-				.orElseThrow(() -> new BusinessException(Messages.TWEET_IMAGE_ID_NOT_FOUND + id));
+	public void delete(List<UUID> tweetId) {
+		List<TweetImage> tweetImages = tweetImageBusinessRules.checkTweetImagesWithTweetId(tweetId);
+		tweetImageRepository.deleteAll(tweetImages);
 	}
 
 	@Override
-	public void delete(List<UUID> tweetId) {
-		List<TweetImage> tweetImages = tweetImageRepository.findByTweetIdIn(tweetId)
-				.orElseThrow(() -> new BusinessException(Messages.TWEET_VIDEO_NOT_FOUND_WITH_TWEETID + tweetId));
-		tweetImageRepository.deleteAll(tweetImages);
+	public TweetImage getTweetImages(UUID id) {
+		return tweetImageRepository.findById(id)
+				.orElseThrow(() -> new BusinessException(Messages.TWEET_IMAGE_ID_NOT_FOUND + id));
 	}
 }

@@ -98,18 +98,17 @@ public class UserManager implements UserService {
 
 	@Transactional
 	@Override
-	@Scheduled(cron = "1 * * * * ?")
+	@Scheduled(cron = "0 0 0 1 * ?")
 	public void hardDelete() {
-//		String authenticationEmail = AuthenticatedUser.getCurrentUser();
-//		System.out.println("Authentication User Email: " + authenticationEmail);
-//		User currentUser = userBusinessRules.getCurrentUser(authenticationEmail);
-		List<UUID> userTweetsId = userTweetService.delete();
+		LocalDateTime cutOffTime = LocalDateTime.now().minusDays(32);
+
+		List<UUID> passiveUsersId = userRepository.findByStatus(cutOffTime);
+		List<UUID> userTweetsId = userTweetService.delete(passiveUsersId);
 
 		tweetImagesService.delete(userTweetsId);
 		tweetVideosService.delete(userTweetsId);
 		tweetService.hardDelete(userTweetsId);
 
-		LocalDateTime cutOffTime = LocalDateTime.now().minusMinutes(1);
 		userRepository.hardDelete(cutOffTime);
 	}
 
@@ -123,14 +122,7 @@ public class UserManager implements UserService {
 
 	@Override
 	public User getUser(UUID id) {
-		Optional<User> oUser = userRepository.findById(id);
-		User user = null;
-		if (oUser.isPresent()) {
-			user = oUser.get();
-		} else {
-			throw new BusinessException(Messages.USER_NOT_FOUND);
-		}
-		return user;
+		return userRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
 	}
 
 }

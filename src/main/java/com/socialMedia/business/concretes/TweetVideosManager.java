@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.TweetVideosService;
+import com.socialMedia.business.rules.tweetVideo.TweetVideoBusinessRules;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
@@ -22,6 +23,9 @@ public class TweetVideosManager implements TweetVideosService {
 
 	@Autowired
 	private TweetVideoRepository tweetVideoRepository;
+
+	@Autowired
+	private TweetVideoBusinessRules tweetVideoBusinessRules;
 
 	@Autowired
 	private ModelMapperService modelMapper;
@@ -51,16 +55,14 @@ public class TweetVideosManager implements TweetVideosService {
 	}
 
 	@Override
+	public void delete(List<UUID> tweetsId) {
+		List<TweetVideo> tweetVideos = tweetVideoBusinessRules.checkTweetVideosWithTweetId(tweetsId);
+		tweetVideoRepository.deleteAll(tweetVideos);
+	}
+
+	@Override
 	public TweetVideo getTweetVideo(UUID id) {
 		return tweetVideoRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(Messages.TWEET_VIDEO_ID_NOT_FOUND + id));
 	}
-
-	@Override
-	public void delete(List<UUID> tweetId) {
-		List<TweetVideo> tweetVideos = tweetVideoRepository.findByTweetIdIn(tweetId)
-				.orElseThrow(() -> new BusinessException(Messages.TWEET_VIDEO_NOT_FOUND_WITH_TWEETID + tweetId));
-		tweetVideoRepository.deleteAll(tweetVideos);
-	}
-
 }

@@ -14,7 +14,7 @@ public interface TweetVideosService {
 
 	void update(List<UpdateTweetVideosRequest> request);
 
-	void delete(List<UUID> tweetId);
+	void delete(List<UUID> tweetsId);
 
 	TweetVideo updateSingleTweetVideo(UpdateTweetVideosRequest request);
 
