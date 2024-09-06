@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import com.socialMedia.entities.User;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
@@ -26,4 +28,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@Modifying
 	@Query("DELETE FROM User u WHERE u.status != Status.ACTIVE AND u.deletedDate <= :timeStamp")
 	void hardDelete(@Param("timeStamp") LocalDateTime timeStamp);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE User a " + "SET a.enabled = TRUE WHERE a.email = ?1")
+	int enableUser(String email);
 }

@@ -4,10 +4,8 @@ import org.springframework.context.ApplicationEvent;
 
 import com.socialMedia.entities.User;
 
-import lombok.Data;
-
-@Data
-
+//@Data
+//@EqualsAndHashCode(callSuper=false)
 public class RegistrationCompleteEvent extends ApplicationEvent {
 
 	private User user;
@@ -17,6 +15,14 @@ public class RegistrationCompleteEvent extends ApplicationEvent {
 		super(user);
 		this.user = user;
 		this.applicationUrl = applicationUrl;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public String getApplicationUrl() {
+		return applicationUrl;
 	}
 
 }
