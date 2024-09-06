@@ -2,5 +2,5 @@ package com.socialMedia.entities;
 
 public enum Status {
 
-	ACTIVE, PASSIVE, SUSPENDED
+	ACTIVE, PASSIVE, SUSPENDED, NOTVERIFIED
 }
