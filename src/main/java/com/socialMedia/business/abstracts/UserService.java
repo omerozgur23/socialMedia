@@ -22,5 +22,4 @@ public interface UserService {
 
 	User getUser(UUID id);
 
-	String validateToken(String token);
 }

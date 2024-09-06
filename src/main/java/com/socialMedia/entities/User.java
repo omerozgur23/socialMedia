@@ -1,10 +1,15 @@
 package com.socialMedia.entities;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,21 +23,23 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@SuperBuilder
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue()
 	private UUID id;
 
 	private String email;
@@ -55,8 +62,16 @@ public class User implements Serializable {
 
 	private LocalDateTime deletedDate;
 
+	public User(String username, String name, String email, String password, LocalDate birthDate) {
+		this.username = username;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.birthDate = birthDate;
+	}
+
 	@Column(name = "is_active")
-	private boolean isEnabled = false;
+	private boolean enabled = false;
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
@@ -96,14 +111,46 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "evaluatingUser")
 	private List<Survey> evaluatingUsers;
 
-//	@Override
-//	public Collection<? extends GrantedAuthority> getAuthorities() {
-//		return List.of(new SimpleGrantedAuthority(this.username));
-//	}
-//
-//	@Override
-//	public String getUsername() {
-//		return this.username;
-//	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Collections.singletonList(new SimpleGrantedAuthority("USER"));
+	}
 
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return !locked;
+//    }
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
 }

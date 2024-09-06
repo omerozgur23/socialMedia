@@ -17,7 +17,7 @@ public class FlywayConfig {
 	@Bean
 	FlywayMigrationStrategy flywayMigrationStrategy() {
 		return (flywayOld) -> {
-			Flyway flyway = Flyway.configure().dataSource(this.dataSource).table("flyway").load();
+			Flyway flyway = Flyway.configure().dataSource(this.dataSource).table("flyway").outOfOrder(true).load();
 			try {
 				flyway.migrate();
 			} catch (Exception e) {
