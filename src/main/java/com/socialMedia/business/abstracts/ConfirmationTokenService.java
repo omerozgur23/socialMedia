@@ -1,14 +1,13 @@
 package com.socialMedia.business.abstracts;
 
-import java.util.Optional;
-
-import com.socialMedia.entities.ConfirmationToken;
+import com.socialMedia.entities.User;
+import com.socialMedia.entities.auth.ConfirmationToken;
 
 public interface ConfirmationTokenService {
 
-	void saveConfirmationToken(ConfirmationToken token);
+	String create(User user);
 
-	Optional<ConfirmationToken> getToken(String token);
+	ConfirmationToken confirmToken(String token);
 
-	int setConfirmedAt(String token);
+	ConfirmationToken getToken(String token);
 }

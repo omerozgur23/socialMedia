@@ -12,22 +12,25 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.socialMedia.business.abstracts.ConfirmationTokenService;
 import com.socialMedia.business.abstracts.TweetImagesService;
 import com.socialMedia.business.abstracts.TweetService;
 import com.socialMedia.business.abstracts.TweetVideosService;
 import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.business.abstracts.UserTweetService;
 import com.socialMedia.business.rules.user.UserBusinessRules;
+import com.socialMedia.core.utilities.config.mailSender.JavaMailSenderService;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
 import com.socialMedia.dataAccess.UserRepository;
 import com.socialMedia.dtos.PageResponse;
+import com.socialMedia.dtos.signUp.SignUpRequest;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
 import com.socialMedia.dtos.user.UpdateUserRequest;
-import com.socialMedia.entities.Status;
 import com.socialMedia.entities.User;
+import com.socialMedia.entities.enums.Status;
 
 import jakarta.transaction.Transactional;
 
@@ -58,6 +61,12 @@ public class UserManager implements UserService {
 	@Autowired
 	private TweetService tweetService;
 
+	@Autowired
+	private JavaMailSenderService mailSender;
+
+	@Autowired
+	private ConfirmationTokenService confirmationTokenService;
+
 	@Override
 	public PageResponse<GetAllUserResponse> getAll() {
 
@@ -69,17 +78,31 @@ public class UserManager implements UserService {
 	}
 
 	@Override
+	public User create(SignUpRequest request) {
+		User user = modelMapper.forRequest().map(request, User.class);
+		user.setBirthDate(userBusinessRules.formatterDate(request.getBirthDate()));
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		user.setCreatedDate(LocalDateTime.now());
+		userRepository.save(user);
+		return user;
+	}
+
+	@Override
 	public User update(UpdateUserRequest request) {
 
 		User user = getUser(request.getId());
 
-		userBusinessRules.checkEmailExistsForUpdate(request.getId(), request.getEmail());
 		userBusinessRules.checkUsernameExists(request.getId(), request.getUsername());
-		if (!request.getEmail().isEmpty())
-			System.out.println("Doğrulama kodu gönderildi!");
 
 		LocalDate birthDate = userBusinessRules.formatterDate(request.getBirthDate());
 		user.setBirthDate(birthDate);
+
+		if (!request.getEmail().isEmpty()) {
+			userBusinessRules.checkEmailExistsForUpdate(request.getId(), request.getEmail());
+			user.setStatus(Status.UNCONFIRMED);
+			String token = confirmationTokenService.create(user);
+			mailSender.send(request.getEmail(), mailSender.buildEmail(request.getName(), token));
+		}
 
 		BeanUtils.copyProperties(request, user, "id", "createdDate", "status", "birthDate");
 
@@ -118,6 +141,11 @@ public class UserManager implements UserService {
 		userBusinessRules.checkOldPasswordIsMatch(user.get(), request.getOldPassword());
 		user.get().setPassword(passwordEncoder.encode(request.getNewPassword()));
 		userRepository.save(user.get());
+	}
+
+	@Override
+	public int enableUser(String email) {
+		return userRepository.enableUser(email);
 	}
 
 	@Override

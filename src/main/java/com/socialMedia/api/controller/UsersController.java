@@ -33,7 +33,6 @@ public class UsersController {
 	@PutMapping("/update")
 	public SuccessResponse update(@RequestBody UpdateUserRequest request) {
 		userService.update(request);
-
 		return new SuccessResponse();
 	}
 

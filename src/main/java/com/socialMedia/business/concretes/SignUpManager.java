@@ -1,67 +1,52 @@
 package com.socialMedia.business.concretes;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.ConfirmationTokenService;
 import com.socialMedia.business.abstracts.SignUpService;
+import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.business.rules.signUp.SignUpBusinessRules;
-import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
-import com.socialMedia.dataAccess.UserRepository;
-import com.socialMedia.entities.ConfirmationToken;
-import com.socialMedia.entities.Status;
+import com.socialMedia.core.utilities.config.mailSender.JavaMailSenderService;
+import com.socialMedia.dtos.signUp.SignUpRequest;
 import com.socialMedia.entities.User;
+import com.socialMedia.entities.auth.ConfirmationToken;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class SignUpManager implements SignUpService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
 	private SignUpBusinessRules signUpBusinessRules;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private ModelMapperService modelMapper;
-
-	@Autowired
 	private ConfirmationTokenService confirmationTokenService;
 
+	@Autowired
+	private JavaMailSenderService emailSenderService;
+
+	@Transactional
 	@Override
-	public String signUp(User request) {
+	public String signUp(SignUpRequest request) {
 		signUpBusinessRules.checkIfEmailExist(request.getEmail());
 		signUpBusinessRules.checkIfUsernameExists(request.getUsername());
 
-		User user = modelMapper.forRequest().map(request, User.class);
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
-		user.setBirthDate(request.getBirthDate());
-		user.setCreatedDate(LocalDateTime.now());
-		user.setStatus(Status.ACTIVE);
-		user.setProAccount(false);
-		user.setEnabled(false);
-		userRepository.save(user);
+		User user = userService.create(request);
+		String token = confirmationTokenService.create(user);
 
-		String token = UUID.randomUUID().toString();
-
-		ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(),
-				LocalDateTime.now().plusMinutes(15), user);
-
-		confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-//      TODO: SEND EMAIL
-
+		emailSenderService.send(request.getEmail(), emailSenderService.buildEmail(request.getName(), token));
 		return token;
 	}
 
 	@Override
-	public int enableUser(String email) {
-		return userRepository.enableUser(email);
+	public String confirmAccount(String token) {
+		ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(token);
+		userService.enableUser(confirmationToken.getUser().getEmail());
+		return token;
 	}
+
 }

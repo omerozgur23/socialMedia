@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.socialMedia.business.abstracts.RegistrationService;
+import com.socialMedia.business.abstracts.SignUpService;
 import com.socialMedia.dtos.SuccessResponse;
 import com.socialMedia.dtos.signUp.SignUpRequest;
 
@@ -17,17 +17,17 @@ import com.socialMedia.dtos.signUp.SignUpRequest;
 public class SignUpController {
 
 	@Autowired
-	private RegistrationService registrationService;
+	private SignUpService signUpService;
 
 	@PostMapping("/signup")
 	public SuccessResponse signUp(@RequestBody SignUpRequest request) {
-		registrationService.register(request);
-
+		signUpService.signUp(request);
 		return new SuccessResponse();
 	}
 
 	@GetMapping(path = "confirm")
-	public String confirm(@RequestParam("token") String token) {
-		return registrationService.confirmToken(token);
+	public SuccessResponse confirm(@RequestParam("token") String token) {
+		signUpService.confirmAccount(token);
+		return new SuccessResponse();
 	}
 }
