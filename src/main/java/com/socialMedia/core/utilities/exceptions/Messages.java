@@ -9,6 +9,7 @@ public record Messages() {
 	public static final String USER_NOT_FOUND = "User not found";
 	public static final String AUTHENTICATED_USER_NOT_FOUND = "Authenticated user not found";
 	public static final String OLD_PASSWORD_NOT_MATCH = "Old password not match";
+	public static final String UNSUPPORTED_USER_STATUS = "Unsupported user status: ";
 
 	// SignUp Messages
 	public static final String USER_EMAIL_ALREADY_EXISTS = "User email already exists";
@@ -27,5 +28,13 @@ public record Messages() {
 
 	// User Tweet Messages
 	public static final String USER_TWEET_NOT_FOUND = "User tweet not found";
+
+	// Token Messages
+	public static final String TOKEN_NOT_FOUND = "Token not found";
+	public static final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
+	public static final String TOKEN_EXPIRED = "Token expired";
+
+	// Email Sender Messages
+	public static final String FAILED_TO_SEND_EMAIL = "Failed to send email";
 
 }

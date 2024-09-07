@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.socialMedia.entities.ConfirmationToken;
+import com.socialMedia.entities.auth.ConfirmationToken;
 
 import jakarta.transaction.Transactional;
 

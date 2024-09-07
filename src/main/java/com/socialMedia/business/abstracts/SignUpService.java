@@ -1,11 +1,10 @@
 package com.socialMedia.business.abstracts;
 
-import com.socialMedia.entities.User;
+import com.socialMedia.dtos.signUp.SignUpRequest;
 
 public interface SignUpService {
 
-	String signUp(User request);
+	String signUp(SignUpRequest request);
 
-	int enableUser(String email);
-
+	String confirmAccount(String token);
 }

@@ -1,72 +1,50 @@
-package com.socialMedia.business.concretes;
+package com.socialMedia.core.utilities.config.mailSender;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.socialMedia.business.abstracts.ConfirmationTokenService;
-import com.socialMedia.business.abstracts.EmailSenderService;
-import com.socialMedia.business.abstracts.RegistrationService;
-import com.socialMedia.business.abstracts.SignUpService;
-import com.socialMedia.business.rules.user.UserBusinessRules;
-import com.socialMedia.dtos.signUp.SignUpRequest;
-import com.socialMedia.entities.ConfirmationToken;
-import com.socialMedia.entities.User;
+import com.socialMedia.core.utilities.exceptions.BusinessException;
+import com.socialMedia.core.utilities.exceptions.Messages;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
-public class RegistrationManager implements RegistrationService {
-
-//	@Autowired
-//	private UserService userService;
+public class JavaMailSenderManager implements JavaMailSenderService {
 
 	@Autowired
-	private SignUpService signUpService;
+	private final static Logger LOGGER = LoggerFactory.getLogger(JavaMailSenderManager.class);
 
 	@Autowired
-	private ConfirmationTokenService confirmationTokenService;
+	private JavaMailSender mailSender;
 
-	@Autowired
-	private EmailSenderService emailSender;
-
-	@Autowired
-	private UserBusinessRules userBusinessRules;
+	private String baseLink = "http://localhost:8080/api/v1/confirm?token=";
 
 	@Override
-	public String register(SignUpRequest request) {
-		LocalDate birthDate = userBusinessRules.formatterDate(request.getBirthDate());
-		String token = signUpService.signUp(new User(request.getUsername(), request.getName(), request.getEmail(),
-				request.getPassword(), birthDate));
-
-		String link = "http://localhost:8080/api/v1/confirm?token=" + token;
-		emailSender.send(request.getEmail(), buildEmail(request.getName(), link));
-
-		return token;
+	@Async
+	public void send(String to, String mailContent) {
+		try {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+			helper.setText(mailContent, true);
+			helper.setTo(to);
+			helper.setSubject("Confirm your email");
+			helper.setFrom("hello@amigoscode.com");
+			mailSender.send(mimeMessage);
+		} catch (MessagingException e) {
+			LOGGER.error("Failed to send email: ", e);
+			throw new BusinessException(Messages.FAILED_TO_SEND_EMAIL);
+		}
 	}
 
 	@Override
-	public String confirmToken(String token) {
-		ConfirmationToken confirmationToken = confirmationTokenService.getToken(token)
-				.orElseThrow(() -> new IllegalStateException("token not found"));
-
-		if (confirmationToken.getConfirmedAt() != null) {
-			throw new IllegalStateException("email already confirmed");
-		}
-
-		LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-
-		if (expiredAt.isBefore(LocalDateTime.now())) {
-			throw new IllegalStateException("token expired");
-		}
-
-		confirmationTokenService.setConfirmedAt(token);
-		signUpService.enableUser(confirmationToken.getUser().getEmail());
-		return "confirmed";
-	}
-
-	@Override
-	public String buildEmail(String name, String link) {
+	public String buildEmail(String name, String token) {
+		String link = baseLink + token;
 		return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" + "\n"
 				+ "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" + "\n"
 				+ "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"
@@ -96,11 +74,10 @@ public class RegistrationManager implements RegistrationService {
 				+ "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n"
 				+ "        \n"
 				+ "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name
-				+ ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
+				+ ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
 				+ link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>"
 				+ "        \n" + "      </td>\n" + "      <td width=\"10\" valign=\"middle\"><br></td>\n"
 				+ "    </tr>\n" + "    <tr>\n" + "      <td height=\"30\"><br></td>\n" + "    </tr>\n"
 				+ "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" + "\n" + "</div></div>";
 	}
-
 }
