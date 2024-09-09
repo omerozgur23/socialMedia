@@ -15,6 +15,7 @@ import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.SuccessResponse;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
+import com.socialMedia.dtos.user.SuspendedUserRequest;
 import com.socialMedia.dtos.user.UpdateUserRequest;
 
 @RestController
@@ -40,6 +41,12 @@ public class UsersController {
 	public PageResponse<GetAllUserResponse> getAll() {
 		return userService.getAll();
 
+	}
+
+	@PostMapping("/suspended")
+	public SuccessResponse suspendedAccount(@RequestBody SuspendedUserRequest request) {
+		userService.suspendedAccount(request);
+		return new SuccessResponse();
 	}
 
 	@PutMapping("/changepassword")

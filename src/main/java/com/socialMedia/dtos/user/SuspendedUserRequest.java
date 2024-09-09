@@ -1,6 +1,6 @@
-package com.socialMedia.dtos;
+package com.socialMedia.dtos.user;
 
-import java.util.List;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResponse<T> {
+public class SuspendedUserRequest {
 
-	private int count;
-
-	private List<T> data;
+	private UUID id;
 }

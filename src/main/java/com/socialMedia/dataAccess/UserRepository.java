@@ -26,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	List<UUID> findByStatus(@Param("timeStamp") LocalDateTime timeStamp);
 
 	@Modifying
-	@Query("DELETE FROM User u WHERE u.status != Status.ACTIVE AND u.deletedDate <= :timeStamp")
+	@Query("DELETE FROM User u WHERE u.status = Status.PASSIVE AND u.deletedDate <= :timeStamp")
 	void hardDelete(@Param("timeStamp") LocalDateTime timeStamp);
 
 	@Transactional

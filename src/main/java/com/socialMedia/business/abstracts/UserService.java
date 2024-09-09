@@ -6,6 +6,7 @@ import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.signUp.SignUpRequest;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
+import com.socialMedia.dtos.user.SuspendedUserRequest;
 import com.socialMedia.dtos.user.UpdateUserRequest;
 import com.socialMedia.entities.User;
 
@@ -20,6 +21,8 @@ public interface UserService {
 	void softDelete(String email);
 
 	void hardDelete();
+
+	void suspendedAccount(SuspendedUserRequest request);
 
 	void changePassword(ChangePasswordRequest request, String email);
 

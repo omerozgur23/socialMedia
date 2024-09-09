@@ -28,6 +28,7 @@ import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.signUp.SignUpRequest;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
+import com.socialMedia.dtos.user.SuspendedUserRequest;
 import com.socialMedia.dtos.user.UpdateUserRequest;
 import com.socialMedia.entities.User;
 import com.socialMedia.entities.enums.Status;
@@ -133,6 +134,13 @@ public class UserManager implements UserService {
 		tweetService.hardDelete(userTweetsId);
 
 		userRepository.hardDelete(cutOffTime);
+	}
+
+	@Override
+	public void suspendedAccount(SuspendedUserRequest request) {
+		User user = getUser(request.getId());
+		user.setStatus(Status.SUSPENDED);
+		userRepository.save(user);
 	}
 
 	@Override
