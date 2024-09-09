@@ -41,21 +41,6 @@ public class JwtConfig {
 
 	}
 
-	public String generateAuthToken(User user) {
-		Map<String, Object> claims = new HashMap<>();
-		claims.putAll(Map.of("email", user.getEmail(), "username", user.getUsername()
-
-		));
-		return generateToken(claims, user);
-	}
-
-	private String generateToken(Map<String, Object> extraClaims, User userDetails) {
-		return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-				.signWith(getKey(), SignatureAlgorithm.HS256).compact();
-	}
-
 	public Claims tokenControl(String token) {
 		JwtParser builder = Jwts.parser().verifyWith(getKey()).build();
 		return builder.parseSignedClaims(token).getPayload();

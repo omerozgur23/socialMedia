@@ -1,9 +1,11 @@
 package com.socialMedia.business.concretes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.ConfirmationTokenService;
@@ -28,7 +30,7 @@ public class ConfirmationTokenManager implements ConfirmationTokenService {
 		String token = UUID.randomUUID().toString();
 
 		ConfirmationToken confirmationToken = ConfirmationToken.builder().token(token).createdAt(LocalDateTime.now())
-				.expiresAt(LocalDateTime.now().plusMinutes(15)).user(user).build();
+				.expiresAt(LocalDateTime.now().plusMinutes(1)).user(user).build();
 
 		confirmationTokenRepository.save(confirmationToken);
 		return token;
@@ -48,5 +50,12 @@ public class ConfirmationTokenManager implements ConfirmationTokenService {
 	public ConfirmationToken getToken(String token) {
 		return confirmationTokenRepository.findByToken(token)
 				.orElseThrow(() -> new BusinessException(Messages.TOKEN_NOT_FOUND));
+	}
+
+	@Override
+	@Scheduled(cron = "0 * * * * ?")
+	public void delete() {
+		List<ConfirmationToken> tokensId = confirmationTokenRepository.findByConfirmedAt();
+		confirmationTokenRepository.deleteAll(tokensId);
 	}
 }
