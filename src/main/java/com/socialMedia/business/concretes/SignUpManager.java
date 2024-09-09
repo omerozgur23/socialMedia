@@ -9,7 +9,9 @@ import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.business.rules.signUp.SignUpBusinessRules;
 import com.socialMedia.core.utilities.config.mailSender.JavaMailSenderService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
-import com.socialMedia.core.utilities.results.ConfirmationResult;
+import com.socialMedia.core.utilities.exceptions.Messages;
+import com.socialMedia.core.utilities.results.SuccessConfirmationResult;
+import com.socialMedia.core.utilities.results.ErrorConfirmationResult;
 import com.socialMedia.core.utilities.results.Result;
 import com.socialMedia.dtos.signUp.ReConfirmationTokenRequest;
 import com.socialMedia.dtos.signUp.SignUpRequest;
@@ -46,27 +48,10 @@ public class SignUpManager implements SignUpService {
 		return token;
 	}
 
-//	@Override
-//	public String confirmAccount(String token) {
-//		ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(token);
-//		userService.enableUser(confirmationToken.getUser().getEmail());
-//		return token;
-//	}
-
 	@Override
 	public Result confirmAccount(String token) {
-		try {
 			ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(token);
-			userService.enableUser(confirmationToken.getUser().getEmail());
-			String frontendUrl = "http://localhost:4040/home";
-
-			new ConfirmationResult(frontendUrl, true, "/login");
-			return new Result(token);
-		} catch (BusinessException e) {
-			return new ConfirmationResult(false, "/resignup");
-		} catch (Exception e) {
-			return new ConfirmationResult(false, "/error");
-		}
+			return signUpBusinessRules.checkConfirmationToken(confirmationToken);
 	}
 
 	@Transactional
