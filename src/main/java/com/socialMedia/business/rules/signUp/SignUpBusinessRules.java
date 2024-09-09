@@ -1,15 +1,21 @@
 package com.socialMedia.business.rules.signUp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
+import com.socialMedia.core.utilities.results.ErrorConfirmationResult;
+import com.socialMedia.core.utilities.results.Result;
+import com.socialMedia.core.utilities.results.SuccessConfirmationResult;
 import com.socialMedia.dataAccess.UserRepository;
 import com.socialMedia.entities.User;
+import com.socialMedia.entities.auth.ConfirmationToken;
 import com.socialMedia.entities.enums.Status;
 
 @Service
@@ -17,6 +23,9 @@ public class SignUpBusinessRules {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserService userService;
 
 	public void checkIfEmailExists(String email) {
 		userRepository.findByEmail(email).ifPresent(user -> {
@@ -44,4 +53,16 @@ public class SignUpBusinessRules {
 		return birthDate;
 	}
 
+	public Result checkConfirmationToken(ConfirmationToken confirmationToken) {
+		
+		if(confirmationToken != null && !confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+			userService.enableUser(confirmationToken.getUser().getEmail());
+			return new SuccessConfirmationResult("/home");
+		}
+		else if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+			return new ErrorConfirmationResult("/resignup", Messages.CONFIRMATION_MAIL_HAS_EXPIRED);
+		}
+		return new ErrorConfirmationResult("/error");
+	}
+	
 }

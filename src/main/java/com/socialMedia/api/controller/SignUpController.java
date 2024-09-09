@@ -1,8 +1,10 @@
 package com.socialMedia.api.controller;
 
-import java.io.IOException;
+import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,12 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.socialMedia.business.abstracts.SignUpService;
-import com.socialMedia.core.utilities.results.ConfirmationResult;
+import com.socialMedia.core.utilities.results.Result;
 import com.socialMedia.dtos.SuccessResponse;
 import com.socialMedia.dtos.signUp.ReConfirmationTokenRequest;
 import com.socialMedia.dtos.signUp.SignUpRequest;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -30,24 +30,13 @@ public class SignUpController {
 		signUpService.signUp(request);
 		return new SuccessResponse();
 	}
-
+	
 	@GetMapping(path = "confirm")
-	public void confirm(@RequestParam("token") String token, HttpServletResponse response) {
-		try {
-			ConfirmationResult result = signUpService.confirmAccount(token);
-			response.sendRedirect(result.getRedirectUrl());
-		} catch (Exception e) {
-			e.printStackTrace(); // Hatanın detaylarını loglamak için bu önemli olabilir.
-			// Yönlendirme sırasında hata olması durumunda kullanıcıyı bir hata sayfasına
-			// yönlendirin
-			try {
-				response.sendRedirect("/error?message=" + e.getMessage());
-			} catch (IOException ioException) {
-				ioException.printStackTrace();
-			}
-		}
-
-//		return new SuccessResponse();
+	public ResponseEntity<Void> confirm(@RequestParam("token") String token) {
+	    Result result = signUpService.confirmAccount(token);
+	    return ResponseEntity.status(HttpStatus.FOUND)
+	            .location(URI.create(result.getRedirectUrl()))
+	            .build();
 	}
 
 	@PostMapping("/resignup")
