@@ -14,6 +14,8 @@ public record Messages() {
 	// SignUp Messages
 	public static final String USER_EMAIL_ALREADY_EXISTS = "User email already exists";
 	public static final String USER_USERNAME_ALREADY_EXISTS = "User username already exists";
+	public static final String NO_ACCOUNT_FOUND = "No account found with this email";
+	public static final String ACCOUNT_IS_UNCONFIRMED = "Account is unconfirmed. Please confirm your account";
 
 	// Login Messages
 	public static final String WRONG_PASSWORD = "Wrong password";

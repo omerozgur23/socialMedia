@@ -1,6 +1,4 @@
-package com.socialMedia.dtos;
-
-import java.util.List;
+package com.socialMedia.dtos.signUp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResponse<T> {
+public class ReConfirmationTokenRequest {
 
-	private int count;
-
-	private List<T> data;
+	private String email;
 }
