@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.SuccessResponse;
+import com.socialMedia.dtos.follow.FollowUserRequest;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
 import com.socialMedia.dtos.user.SuspendedUserRequest;
@@ -54,5 +55,10 @@ public class UsersController {
 		userService.changePassword(request, principal.getName());
 		return new SuccessResponse();
 	}
-
+	
+	@PostMapping("/follow")
+	public SuccessResponse followUser(@RequestBody FollowUserRequest request) {
+		userService.followUser(request);
+		return new SuccessResponse();
+	}
 }
