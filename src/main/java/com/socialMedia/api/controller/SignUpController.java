@@ -30,13 +30,11 @@ public class SignUpController {
 		signUpService.signUp(request);
 		return new SuccessResponse();
 	}
-	
+
 	@GetMapping(path = "confirm")
-	public ResponseEntity<Void> confirm(@RequestParam("token") String token) {
-	    Result result = signUpService.confirmAccount(token);
-	    return ResponseEntity.status(HttpStatus.FOUND)
-	            .location(URI.create(result.getRedirectUrl()))
-	            .build();
+	public ResponseEntity<Void> confirmAccount(@RequestParam("token") String token) {
+		Result result = signUpService.confirmAccount(token);
+		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(result.getRedirectUrl())).build();
 	}
 
 	@PostMapping("/resignup")

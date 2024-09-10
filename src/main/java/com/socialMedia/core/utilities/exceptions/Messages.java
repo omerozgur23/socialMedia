@@ -20,6 +20,12 @@ public record Messages() {
 	// Login Messages
 	public static final String WRONG_PASSWORD = "Wrong password";
 	public static final String USER_STATUS_ALREADY_ACTIVE = "User status already active";
+	public static final String PLEASE_ENTER_A_VALID_EMAIL_ADDRESS = "Please enter a valid email address";
+	public static final String EMAIL_CANNOT_BE_BLANK = "Email cannot be blank";
+	public static final String PASSWORD_CANNOT_BE_BLANK = "Password cannot be blank";
+	public static final String PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_LOWERCASE_LETTER = "Password must contain at least one lowercase letter";
+	public static final String PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_UPPERCASE_LETTER = "Password must contain at least one uppercase letter";
+	public static final String PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_NUMBER = "Password must contain at least one number";
 
 	// Tweet Messages
 	public static final String TWEET_NOT_FOUND = "Tweet not found with ID: ";
