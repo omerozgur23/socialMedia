@@ -1,4 +1,4 @@
-package com.socialMedia.dtos.follow;
+package com.socialMedia.dtos.follower;
 
 import java.util.UUID;
 
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FollowUserRequest {
+public class UnfollowUserRequest {
 
 	private UUID id;
-	
 }

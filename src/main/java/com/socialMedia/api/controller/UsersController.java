@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.SuccessResponse;
-import com.socialMedia.dtos.follow.FollowUserRequest;
+import com.socialMedia.dtos.follower.FollowUserRequest;
+import com.socialMedia.dtos.follower.RemoveFollowerUserRequest;
+import com.socialMedia.dtos.follower.UnfollowUserRequest;
+import com.socialMedia.dtos.user.BlockUserRequest;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
 import com.socialMedia.dtos.user.SuspendedUserRequest;
@@ -55,10 +58,29 @@ public class UsersController {
 		userService.changePassword(request, principal.getName());
 		return new SuccessResponse();
 	}
-	
+
 	@PostMapping("/follow")
 	public SuccessResponse followUser(@RequestBody FollowUserRequest request) {
 		userService.followUser(request);
 		return new SuccessResponse();
 	}
+
+	@PostMapping("/unfollow")
+	public SuccessResponse unfollowUser(@RequestBody UnfollowUserRequest request) {
+		userService.unfollowUser(request);
+		return new SuccessResponse();
+	}
+
+	@PostMapping("/removefollower")
+	public SuccessResponse removeFollowerUser(@RequestBody RemoveFollowerUserRequest request) {
+		userService.removeFollowerUser(request);
+		return new SuccessResponse();
+	}
+
+	@PostMapping("/blockuser")
+	public SuccessResponse blockUser(@RequestBody BlockUserRequest request) {
+		userService.blockUser(request);
+		return new SuccessResponse();
+	}
+
 }
