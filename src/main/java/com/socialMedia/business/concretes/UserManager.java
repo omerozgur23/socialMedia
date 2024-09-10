@@ -19,12 +19,14 @@ import com.socialMedia.business.abstracts.TweetVideosService;
 import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.business.abstracts.UserTweetService;
 import com.socialMedia.business.rules.user.UserBusinessRules;
+import com.socialMedia.core.utilities.AuthenticatedUser;
 import com.socialMedia.core.utilities.config.mailSender.JavaMailSenderService;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
 import com.socialMedia.dataAccess.UserRepository;
 import com.socialMedia.dtos.PageResponse;
+import com.socialMedia.dtos.follow.FollowUserRequest;
 import com.socialMedia.dtos.signUp.SignUpRequest;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
@@ -159,6 +161,24 @@ public class UserManager implements UserService {
 	@Override
 	public User getUser(UUID id) {
 		return userRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
+	}
+	
+	@Override
+	public void followUser(FollowUserRequest request) { 
+		String currentUserEmail = AuthenticatedUser.getCurrentUser();
+		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User followingUser = getUser(request.getId());
+		
+		System.out.println("currentUser:" + currentUser);
+		System.out.println("followingUser:" + followingUser);
+		
+		followingUser.getFollowers().add(currentUser);
+		currentUser.getFollowings().add(followingUser);
+		
+		userRepository.save(currentUser);
+		userRepository.save(followingUser);
+		
+//		return followingUser;
 	}
 
 }
