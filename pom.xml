@@ -50,7 +50,6 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -92,14 +91,15 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.12.3</version>
 		</dependency>
-		
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -116,5 +116,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

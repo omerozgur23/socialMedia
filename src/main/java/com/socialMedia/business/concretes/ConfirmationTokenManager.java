@@ -47,15 +47,15 @@ public class ConfirmationTokenManager implements ConfirmationTokenService {
 	}
 
 	@Override
-	public ConfirmationToken getToken(String token) {
-		return confirmationTokenRepository.findByToken(token)
-				.orElseThrow(() -> new BusinessException(Messages.TOKEN_NOT_FOUND));
+	@Scheduled(cron = "0 0 0 * * ?")
+	public void delete() {
+		List<ConfirmationToken> tokensId = confirmationTokenRepository.findExpiredTokens();
+		confirmationTokenRepository.deleteAll(tokensId);
 	}
 
 	@Override
-	@Scheduled(cron = "0 * * * * ?")
-	public void delete() {
-		List<ConfirmationToken> tokensId = confirmationTokenRepository.findByConfirmedAt();
-		confirmationTokenRepository.deleteAll(tokensId);
+	public ConfirmationToken getToken(String token) {
+		return confirmationTokenRepository.findByToken(token)
+				.orElseThrow(() -> new BusinessException(Messages.TOKEN_NOT_FOUND));
 	}
 }

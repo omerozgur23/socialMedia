@@ -8,10 +8,6 @@ import com.socialMedia.business.abstracts.SignUpService;
 import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.business.rules.signUp.SignUpBusinessRules;
 import com.socialMedia.core.utilities.config.mailSender.JavaMailSenderService;
-import com.socialMedia.core.utilities.exceptions.BusinessException;
-import com.socialMedia.core.utilities.exceptions.Messages;
-import com.socialMedia.core.utilities.results.SuccessConfirmationResult;
-import com.socialMedia.core.utilities.results.ErrorConfirmationResult;
 import com.socialMedia.core.utilities.results.Result;
 import com.socialMedia.dtos.signUp.ReConfirmationTokenRequest;
 import com.socialMedia.dtos.signUp.SignUpRequest;
@@ -40,7 +36,7 @@ public class SignUpManager implements SignUpService {
 	public String signUp(SignUpRequest request) {
 		signUpBusinessRules.checkIfEmailExists(request.getEmail());
 		signUpBusinessRules.checkIfUsernameExists(request.getUsername());
-
+		signUpBusinessRules.validatePassword(request.getPassword());
 		User user = userService.create(request);
 		String token = confirmationTokenService.create(user);
 
@@ -50,8 +46,8 @@ public class SignUpManager implements SignUpService {
 
 	@Override
 	public Result confirmAccount(String token) {
-			ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(token);
-			return signUpBusinessRules.checkConfirmationToken(confirmationToken);
+		ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(token);
+		return signUpBusinessRules.checkConfirmationToken(confirmationToken);
 	}
 
 	@Transactional
