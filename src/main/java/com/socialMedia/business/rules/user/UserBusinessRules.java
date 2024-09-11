@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
 import com.socialMedia.core.utilities.validation.pasword.PasswordValidator;
 import com.socialMedia.core.utilities.validation.pasword.PasswordValidatorBuilder;
 import com.socialMedia.dataAccess.UserRepository;
+import com.socialMedia.dtos.follower.RemoveFollowerUserRequest;
+import com.socialMedia.dtos.follower.UnfollowUserRequest;
 import com.socialMedia.entities.User;
 
 @Service
@@ -86,5 +89,19 @@ public class UserBusinessRules {
 		List<User> users = currentUser.getFollowers();
 		if (!users.contains(followerUser))
 			throw new BusinessException(Messages.USER_NOT_FOLLOWED);
+	}
+
+	public void removeFollowerIfExists(User currentUser, User blocUser, UserService userService) {
+		if (currentUser.getFollowers().contains(blocUser)) {
+			RemoveFollowerUserRequest request = new RemoveFollowerUserRequest(blocUser.getId());
+			userService.removeFollowerUser(request);
+		}
+	}
+
+	public void unfollowIfFollowing(User currentUser, User blockUser, UserService userService) {
+		if (currentUser.getFollowings().contains(blockUser)) {
+			UnfollowUserRequest request = new UnfollowUserRequest(blockUser.getId());
+			userService.unfollowUser(request);
+		}
 	}
 }

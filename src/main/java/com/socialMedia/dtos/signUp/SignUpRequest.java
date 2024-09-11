@@ -30,6 +30,7 @@ public class SignUpRequest {
 	@NotBlank(message = Messages.BIRTH_DATE_CANNOT_BE_BLANK)
 	private String birthDate;
 
+	@NotBlank(message = Messages.PASSWORD_CANNOT_BE_BLANK)
 	private String password;
 
 	@Size(max = 200, message = Messages.YOU_HAVE_EXISTIS_EXCEEDED_THE_CHARACTER_LIMIT_200)

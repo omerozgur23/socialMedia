@@ -10,6 +10,8 @@ import com.socialMedia.business.abstracts.LoginService;
 import com.socialMedia.dtos.login.LoginRequest;
 import com.socialMedia.dtos.login.LoginResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1")
 public class LoginContrroller {
@@ -18,7 +20,7 @@ public class LoginContrroller {
 	private LoginService loginService;
 
 	@PostMapping("/login")
-	public LoginResponse login(@RequestBody LoginRequest request) {
+	public LoginResponse login(@Valid @RequestBody LoginRequest request) {
 		String token = loginService.login(request);
 		return new LoginResponse(token);
 	}
