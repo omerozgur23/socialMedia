@@ -81,6 +81,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "recipientUser")
 	private List<Message> recipientMessages;
 
+	@OneToMany(mappedBy = "user")
+	private List<SurveyAnswer> surveyAnswers;
+
 	@ManyToMany
 	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "follower_user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "following_user_id") })
@@ -92,8 +95,8 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "creatorUser")
 	private List<Survey> creatorUsers;
 
-	@OneToMany(mappedBy = "evaluatingUser")
-	private List<Survey> evaluatingUsers;
+//	@OneToMany(mappedBy = "evaluatingUser")
+//	private List<Survey> evaluatingUsers;
 
 	@ManyToMany
 	@JoinTable(name = "blocked_ones", joinColumns = { @JoinColumn(name = "obstructive_id") }, inverseJoinColumns = {
