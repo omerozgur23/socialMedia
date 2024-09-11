@@ -1,8 +1,10 @@
 package com.socialMedia.entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -36,7 +38,8 @@ public class Comment {
 	@JoinColumn(name = "tweet_id")
 	private Tweet tweet;
 
-	private String createDate;
+	@Column(name = "created_date")
+	private LocalDateTime createdDate;
 
 	@ManyToMany
 	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))

@@ -51,6 +51,8 @@ public class User implements Serializable {
 
 	private boolean isProAccount = false;
 
+	private boolean isPrivate = false;
+
 	private LocalDateTime createdDate;
 
 	private LocalDateTime deletedDate;
@@ -80,8 +82,8 @@ public class User implements Serializable {
 	private List<Message> recipientMessages;
 
 	@ManyToMany
-	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "following_user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "follower_user_id") })
+	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "follower_user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "following_user_id") })
 	private List<User> followings;
 
 	@ManyToMany(mappedBy = "followings")
@@ -92,4 +94,10 @@ public class User implements Serializable {
 
 	@OneToMany(mappedBy = "evaluatingUser")
 	private List<Survey> evaluatingUsers;
+
+	@ManyToMany
+	@JoinTable(name = "blocked_ones", joinColumns = { @JoinColumn(name = "obstructive_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "blocked_id") })
+	private List<User> blockedUsers;
+
 }

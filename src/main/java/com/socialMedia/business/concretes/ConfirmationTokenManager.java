@@ -30,7 +30,7 @@ public class ConfirmationTokenManager implements ConfirmationTokenService {
 		String token = UUID.randomUUID().toString();
 
 		ConfirmationToken confirmationToken = ConfirmationToken.builder().token(token).createdAt(LocalDateTime.now())
-				.expiresAt(LocalDateTime.now().plusMinutes(1)).user(user).build();
+				.expiresAt(LocalDateTime.now().plusMinutes(15)).user(user).build();
 
 		confirmationTokenRepository.save(confirmationToken);
 		return token;

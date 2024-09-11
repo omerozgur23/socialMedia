@@ -19,13 +19,18 @@ import com.socialMedia.business.abstracts.TweetVideosService;
 import com.socialMedia.business.abstracts.UserService;
 import com.socialMedia.business.abstracts.UserTweetService;
 import com.socialMedia.business.rules.user.UserBusinessRules;
+import com.socialMedia.core.utilities.AuthenticatedUser;
 import com.socialMedia.core.utilities.config.mailSender.JavaMailSenderService;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
 import com.socialMedia.dataAccess.UserRepository;
 import com.socialMedia.dtos.PageResponse;
+import com.socialMedia.dtos.follower.FollowUserRequest;
+import com.socialMedia.dtos.follower.RemoveFollowerUserRequest;
+import com.socialMedia.dtos.follower.UnfollowUserRequest;
 import com.socialMedia.dtos.signUp.SignUpRequest;
+import com.socialMedia.dtos.user.BlockUserRequest;
 import com.socialMedia.dtos.user.ChangePasswordRequest;
 import com.socialMedia.dtos.user.GetAllUserResponse;
 import com.socialMedia.dtos.user.SuspendedUserRequest;
@@ -145,6 +150,7 @@ public class UserManager implements UserService {
 
 	@Override
 	public void changePassword(ChangePasswordRequest request, String email) {
+		userBusinessRules.validatePassword(request.getNewPassword());
 		Optional<User> user = userRepository.findByEmail(email);
 		userBusinessRules.checkOldPasswordIsMatch(user.get(), request.getOldPassword());
 		user.get().setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -161,4 +167,64 @@ public class UserManager implements UserService {
 		return userRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
 	}
 
+	@Override
+	public void followUser(FollowUserRequest request) {
+		String currentUserEmail = AuthenticatedUser.getCurrentUser();
+		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User followingUser = getUser(request.getId());
+		userBusinessRules.preventUserFromFollowingSelf(currentUser, followingUser);
+		userBusinessRules.preventDuplicateFollow(currentUser, followingUser);
+
+		currentUser.getFollowings().add(followingUser);
+		followingUser.getFollowers().add(currentUser);
+
+		userRepository.save(currentUser);
+		userRepository.save(followingUser);
+	}
+
+	@Override
+	public void unfollowUser(UnfollowUserRequest request) {
+		String currentUserEmail = AuthenticatedUser.getCurrentUser();
+		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User unfollowUser = getUser(request.getId());
+		currentUser.getFollowings().remove(unfollowUser);
+		unfollowUser.getFollowers().remove(currentUser);
+
+		userRepository.save(currentUser);
+		userRepository.save(unfollowUser);
+	}
+
+	@Override
+	public void removeFollowerUser(RemoveFollowerUserRequest request) {
+		String currentUserEmail = AuthenticatedUser.getCurrentUser();
+		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User followerUser = getUser(request.getId());
+		userBusinessRules.checkUserFollower(currentUser, followerUser);
+
+		currentUser.getFollowers().remove(followerUser);
+		followerUser.getFollowings().remove(currentUser);
+
+		userRepository.save(currentUser);
+		userRepository.save(followerUser);
+	}
+
+	@Transactional
+	@Override
+	public void blockUser(BlockUserRequest request) {
+		String currentUserEmail = AuthenticatedUser.getCurrentUser();
+		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User blockUser = getUser(request.getId());
+		List<User> followers = currentUser.getFollowers();
+		List<User> following = currentUser.getFollowings();
+		if (followers.contains(blockUser)) {
+			RemoveFollowerUserRequest dto = new RemoveFollowerUserRequest(blockUser.getId());
+			removeFollowerUser(dto);
+		}
+		if (following.contains(blockUser)) {
+			UnfollowUserRequest dto = new UnfollowUserRequest(blockUser.getId());
+			unfollowUser(dto);
+		}
+		currentUser.getBlockedUsers().add(blockUser);
+		userRepository.save(currentUser);
+	}
 }

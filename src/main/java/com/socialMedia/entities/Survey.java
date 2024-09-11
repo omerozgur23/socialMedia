@@ -33,9 +33,9 @@ public class Survey {
 	@JoinColumn(name = "evaluating_user_id")
 	private User evaluatingUser;
 
-	private String createDate;
+	private String createdDate;
 
-	private String deleteDate;
+	private String deletedDate;
 
 	private boolean isFinished;
 

@@ -10,6 +10,9 @@ public record Messages() {
 	public static final String AUTHENTICATED_USER_NOT_FOUND = "Authenticated user not found";
 	public static final String OLD_PASSWORD_NOT_MATCH = "Old password not match";
 	public static final String UNSUPPORTED_USER_STATUS = "Unsupported user status: ";
+	public static final String USERNAME_CANNOT_BE_BLANK = "Username cannot be blank ";
+	public static final String NAME_CANNOT_BE_BLANK = "Name cannot be blank ";
+	public static final String BIRTH_DATE_CANNOT_BE_BLANK = "Birth date cannot be blank ";
 
 	// SignUp Messages
 	public static final String USER_EMAIL_ALREADY_EXISTS = "User email already exists";
@@ -33,6 +36,8 @@ public record Messages() {
 	public static final String TWEET_VIDEO_ID_NOT_FOUND = "Tweet Video not found with ID: ";
 	public static final String TWEET_IMAGE_NOT_FOUND_WITH_TWEET_ID = "Tweet Image not found with tweet ID: ";
 	public static final String TWEET_VIDEO_NOT_FOUND_WITH_TWEET_ID = "Tweet Video not found with tweet ID: ";
+	public static final String YOU_HAVE_EXISTIS_EXCEEDED_THE_CHARACTER_LIMIT_280 = "You have existis exceeded the character limit (max=280)";
+	public static final String YOU_HAVE_EXISTIS_EXCEEDED_THE_CHARACTER_LIMIT_200 = "You have existis exceeded the character limit (max=200)";
 
 	// User Tweet Messages
 	public static final String USER_TWEET_NOT_FOUND = "User tweet not found";
@@ -45,5 +50,10 @@ public record Messages() {
 
 	// Email Sender Messages
 	public static final String FAILED_TO_SEND_EMAIL = "Failed to send email";
+
+	// Follow Messages
+	public static final String USER_CANNOT_BE_FOLLOW_SELF = "User cannot be follow yourself";
+	public static final String USER_ALREADY_FOLLOWED = "User is already followed";
+	public static final String USER_NOT_FOLLOWED = "User is not followed";
 
 }
