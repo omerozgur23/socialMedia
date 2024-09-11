@@ -1,5 +1,6 @@
 package com.socialMedia.entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,17 +30,21 @@ public class Survey {
 	@JoinColumn(name = "creator_user_id")
 	private User creatorUser;
 
-	@ManyToOne
-	@JoinColumn(name = "evaluating_user_id")
-	private User evaluatingUser;
+//	@ManyToOne
+//	@JoinColumn(name = "evaluating_user_id")
+//	private User evaluatingUser;
 
-	private String createdDate;
+	private LocalDateTime createdDate;
 
-	private String deletedDate;
+	private LocalDateTime deletedDate;
+
+	private LocalDateTime finishedDate;
 
 	private boolean isFinished;
 
 	@OneToMany(mappedBy = "survey")
 	private List<SurveyOption> surveyOptions;
 
+	@OneToMany(mappedBy = "survey")
+	private List<SurveyAnswer> surveyAnswers;
 }
