@@ -18,6 +18,8 @@ import com.socialMedia.dtos.tweet.DeleteTweetRequest;
 import com.socialMedia.dtos.tweet.GetAllTweetResponse;
 import com.socialMedia.dtos.tweet.UpdateTweetDTO;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/tweets")
 public class TweetsController {
@@ -31,13 +33,13 @@ public class TweetsController {
 	}
 
 	@PostMapping("/create")
-	public SuccessResponse create(@RequestBody CreateTweetDTO request, Principal principal) {
+	public SuccessResponse create(@Valid @RequestBody CreateTweetDTO request, Principal principal) {
 		tweetService.create(request, principal.getName());
 		return new SuccessResponse();
 	}
 
 	@PutMapping("/update")
-	public SuccessResponse update(@RequestBody UpdateTweetDTO request, Principal principal) {
+	public SuccessResponse update(@Valid @RequestBody UpdateTweetDTO request, Principal principal) {
 		tweetService.update(request, principal.getName());
 		return new SuccessResponse();
 	}

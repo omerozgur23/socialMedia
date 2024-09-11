@@ -22,6 +22,8 @@ import com.socialMedia.dtos.user.GetAllUserResponse;
 import com.socialMedia.dtos.user.SuspendedUserRequest;
 import com.socialMedia.dtos.user.UpdateUserRequest;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UsersController {
@@ -36,7 +38,7 @@ public class UsersController {
 	}
 
 	@PutMapping("/update")
-	public SuccessResponse update(@RequestBody UpdateUserRequest request) {
+	public SuccessResponse update(@Valid @RequestBody UpdateUserRequest request) {
 		userService.update(request);
 		return new SuccessResponse();
 	}
@@ -54,7 +56,7 @@ public class UsersController {
 	}
 
 	@PutMapping("/changepassword")
-	public SuccessResponse changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
+	public SuccessResponse changePassword(@Valid @RequestBody ChangePasswordRequest request, Principal principal) {
 		userService.changePassword(request, principal.getName());
 		return new SuccessResponse();
 	}

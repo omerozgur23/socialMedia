@@ -75,7 +75,6 @@ public class UserManager implements UserService {
 
 	@Override
 	public PageResponse<GetAllUserResponse> getAll() {
-
 		List<User> users = userRepository.findAll();
 		List<GetAllUserResponse> response = users.stream()
 				.map(user -> modelMapper.forResponse().map(user, GetAllUserResponse.class)).toList();
@@ -214,16 +213,10 @@ public class UserManager implements UserService {
 		String currentUserEmail = AuthenticatedUser.getCurrentUser();
 		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
 		User blockUser = getUser(request.getId());
-		List<User> followers = currentUser.getFollowers();
-		List<User> following = currentUser.getFollowings();
-		if (followers.contains(blockUser)) {
-			RemoveFollowerUserRequest dto = new RemoveFollowerUserRequest(blockUser.getId());
-			removeFollowerUser(dto);
-		}
-		if (following.contains(blockUser)) {
-			UnfollowUserRequest dto = new UnfollowUserRequest(blockUser.getId());
-			unfollowUser(dto);
-		}
+
+		userBusinessRules.removeFollowerIfExists(currentUser, blockUser, this);
+		userBusinessRules.unfollowIfFollowing(currentUser, blockUser, this);
+
 		currentUser.getBlockedUsers().add(blockUser);
 		userRepository.save(currentUser);
 	}

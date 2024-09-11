@@ -18,6 +18,8 @@ import com.socialMedia.dtos.SuccessResponse;
 import com.socialMedia.dtos.signUp.ReConfirmationTokenRequest;
 import com.socialMedia.dtos.signUp.SignUpRequest;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1")
 public class SignUpController {
@@ -26,7 +28,7 @@ public class SignUpController {
 	private SignUpService signUpService;
 
 	@PostMapping("/signup")
-	public SuccessResponse signUp(@RequestBody SignUpRequest request) {
+	public SuccessResponse signUp(@Valid @RequestBody SignUpRequest request) {
 		signUpService.signUp(request);
 		return new SuccessResponse();
 	}
@@ -38,7 +40,7 @@ public class SignUpController {
 	}
 
 	@PostMapping("/resignup")
-	public SuccessResponse sendReConfirmationToken(@RequestBody ReConfirmationTokenRequest request) {
+	public SuccessResponse sendReConfirmationToken(@Valid @RequestBody ReConfirmationTokenRequest request) {
 		signUpService.sendReConfirmationToken(request);
 		return new SuccessResponse();
 	}
