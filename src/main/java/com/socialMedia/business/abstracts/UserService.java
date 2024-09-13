@@ -16,6 +16,10 @@ import com.socialMedia.entities.User;
 
 public interface UserService {
 
+	User getUser(UUID id);
+
+//	User getCurrentUser();
+
 	PageResponse<GetAllUserResponse> getAll();
 
 	User create(SignUpRequest request);
@@ -31,8 +35,6 @@ public interface UserService {
 	void changePassword(ChangePasswordRequest request, String email);
 
 	int enableUser(String email);
-
-	User getUser(UUID id);
 
 	void followUser(FollowUserRequest request);
 

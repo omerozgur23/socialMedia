@@ -74,6 +74,18 @@ public class UserManager implements UserService {
 	private ConfirmationTokenService confirmationTokenService;
 
 	@Override
+	public User getUser(UUID id) {
+		return userRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
+	}
+
+//	@Override
+//	public User getCurrentUser() {
+//		String currentUserEmail = AuthenticatedUser.getCurrentUser();
+//		return userRepository.findByEmail(currentUserEmail)
+//				.orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
+//	}
+
+	@Override
 	public PageResponse<GetAllUserResponse> getAll() {
 		List<User> users = userRepository.findAll();
 		List<GetAllUserResponse> response = users.stream()
@@ -162,14 +174,8 @@ public class UserManager implements UserService {
 	}
 
 	@Override
-	public User getUser(UUID id) {
-		return userRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
-	}
-
-	@Override
 	public void followUser(FollowUserRequest request) {
-		String currentUserEmail = AuthenticatedUser.getCurrentUser();
-		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User currentUser = AuthenticatedUser.getCurrentUser();
 		User followingUser = getUser(request.getId());
 		userBusinessRules.preventUserFromFollowingSelf(currentUser, followingUser);
 		userBusinessRules.preventDuplicateFollow(currentUser, followingUser);
@@ -183,8 +189,7 @@ public class UserManager implements UserService {
 
 	@Override
 	public void unfollowUser(UnfollowUserRequest request) {
-		String currentUserEmail = AuthenticatedUser.getCurrentUser();
-		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User currentUser = AuthenticatedUser.getCurrentUser();
 		User unfollowUser = getUser(request.getId());
 		currentUser.getFollowings().remove(unfollowUser);
 		unfollowUser.getFollowers().remove(currentUser);
@@ -195,8 +200,7 @@ public class UserManager implements UserService {
 
 	@Override
 	public void removeFollowerUser(RemoveFollowerUserRequest request) {
-		String currentUserEmail = AuthenticatedUser.getCurrentUser();
-		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User currentUser = AuthenticatedUser.getCurrentUser();
 		User followerUser = getUser(request.getId());
 		userBusinessRules.checkUserFollower(currentUser, followerUser);
 
@@ -210,8 +214,7 @@ public class UserManager implements UserService {
 	@Transactional
 	@Override
 	public void blockUser(BlockUserRequest request) {
-		String currentUserEmail = AuthenticatedUser.getCurrentUser();
-		User currentUser = userBusinessRules.getCurrentUser(currentUserEmail);
+		User currentUser = AuthenticatedUser.getCurrentUser();
 		User blockUser = getUser(request.getId());
 
 		userBusinessRules.removeFollowerIfExists(currentUser, blockUser, this);

@@ -21,7 +21,11 @@ public class GetAllTweetResponse {
 
 	private String voicePath;
 
+	private List<GetTweetLikesResponse> userLikes;
+
 	private List<GetAllTweetImageResponse> tweetImages;
 
 	private List<GetAllTweetVideoResponse> tweetVideos;
+
+	private List<GetCommentForTweetResponse> tweetComment;
 }

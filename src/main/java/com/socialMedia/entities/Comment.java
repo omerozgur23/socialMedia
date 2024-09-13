@@ -42,6 +42,6 @@ public class Comment {
 	private LocalDateTime createdDate;
 
 	@ManyToMany
-	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
-	private List<User> userComments;
+	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "comment_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	private List<User> userCommentLikes;
 }

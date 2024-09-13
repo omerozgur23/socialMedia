@@ -72,8 +72,8 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Comment> userComment;
 
-	@ManyToMany(mappedBy = "userComments")
-	private List<Comment> comments;
+	@ManyToMany(mappedBy = "userCommentLikes")
+	private List<Comment> commentLikes;
 
 	@OneToMany(mappedBy = "sendingUser")
 	private List<Message> sendMessages;

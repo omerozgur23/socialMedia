@@ -14,6 +14,8 @@ public interface TweetService {
 
 	PageResponse<GetAllTweetResponse> getAll();
 
+	Tweet getTweet(UUID id);
+
 	Tweet create(CreateTweetDTO request, String currentUser);
 
 	Tweet update(UpdateTweetDTO request, String currentUser);
@@ -21,7 +23,4 @@ public interface TweetService {
 	void softDelete(DeleteTweetRequest request);
 
 	void hardDelete(List<UUID> tweetsId);
-
-	Tweet getTweet(UUID id);
-
 }

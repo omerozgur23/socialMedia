@@ -28,11 +28,6 @@ public class UserBusinessRules {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public User getCurrentUser(String currentUserEmail) {
-		return userRepository.findByEmail(currentUserEmail)
-				.orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
-	}
-
 	public void checkEmailExistsForUpdate(UUID currentUserId, String email) {
 		userRepository.findById(currentUserId).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
 

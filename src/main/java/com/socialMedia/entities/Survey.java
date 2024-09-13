@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,19 +21,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "surveys")
+@Builder
 public class Survey {
 
 	@Id
 	@GeneratedValue
 	private UUID id;
 
+	private String title;
+
 	@ManyToOne
 	@JoinColumn(name = "creator_user_id")
 	private User creatorUser;
-
-//	@ManyToOne
-//	@JoinColumn(name = "evaluating_user_id")
-//	private User evaluatingUser;
 
 	private LocalDateTime createdDate;
 

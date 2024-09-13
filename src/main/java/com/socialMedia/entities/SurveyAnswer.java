@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "survey_answer")
+@Table(name = "survey_answers")
+@Builder
 public class SurveyAnswer {
 
 	@Id
@@ -34,5 +36,4 @@ public class SurveyAnswer {
 	@ManyToOne
 	@JoinColumn(name = "survey_option_id")
 	private SurveyOption surveyOption;
-
 }
