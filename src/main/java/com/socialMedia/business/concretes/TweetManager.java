@@ -57,6 +57,11 @@ public class TweetManager implements TweetService {
 		return new PageResponse<GetAllTweetResponse>(count, response);
 	}
 
+	@Override
+	public Tweet getTweet(UUID id) {
+		return tweetRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.TWEET_NOT_FOUND));
+	}
+
 	@Transactional
 	@Override
 	public Tweet create(CreateTweetDTO request, String currentUserEmail) {
@@ -102,11 +107,6 @@ public class TweetManager implements TweetService {
 
 		tweetRepository.save(tweet);
 		userTweetService.userTweetSoftDelete(tweet.getId());
-	}
-
-	@Override
-	public Tweet getTweet(UUID id) {
-		return tweetRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.TWEET_NOT_FOUND));
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 CREATE TABLE surveys (
 	id BINARY(16) PRIMARY KEY NOT NULL,
+	title VARCHAR(280) NOT NULL,
 	creator_user_id BINARY(16) NOT NULL,
 	created_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	deleted_date DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
+	finished_date DATETIME NOT NULL,
 	is_finished BOOLEAN NOT NULL,
 	CONSTRAINT surveys_creator_fk
 		FOREIGN KEY (creator_user_id)

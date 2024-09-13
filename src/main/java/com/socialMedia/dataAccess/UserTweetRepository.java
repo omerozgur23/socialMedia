@@ -12,6 +12,8 @@ import com.socialMedia.entities.UserTweet;
 @Repository
 public interface UserTweetRepository extends JpaRepository<UserTweet, UUID> {
 
+	List<UserTweet> findByUserId(UUID userId);
+
 	Optional<UserTweet> findByUserIdAndTweetId(UUID userId, UUID tweetId);
 
 	Optional<UserTweet> findByTweetId(UUID tweetId);

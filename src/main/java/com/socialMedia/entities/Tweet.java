@@ -46,7 +46,7 @@ public class Tweet {
 	private UserTweet userTweet;
 
 	@ManyToMany
-	@JoinTable(name = "likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tweet_id"))
+	@JoinTable(name = "likes", joinColumns = @JoinColumn(name = "tweet_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<User> userLikes;
 
 	@ManyToMany

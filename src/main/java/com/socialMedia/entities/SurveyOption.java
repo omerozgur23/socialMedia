@@ -25,7 +25,7 @@ public class SurveyOption {
 	@GeneratedValue
 	private UUID id;
 
-	private String desciription;
+	private String description;
 
 	@ManyToOne
 	@JoinColumn(name = "survey_id")
