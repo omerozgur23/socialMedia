@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.UserService;
-import com.socialMedia.core.utilities.config.jwt.JwtConfig;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
 import com.socialMedia.core.utilities.results.ErrorConfirmationResult;
@@ -29,9 +28,6 @@ public class SignUpBusinessRules {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private JwtConfig jwtConfig;
 
 	public void checkIfEmailExists(String email) {
 		userRepository.findByEmail(email).ifPresent(user -> {

@@ -28,5 +28,4 @@ public class TweetImage {
 	@ManyToOne
 	@JoinColumn(name = "tweet_id")
 	private Tweet tweet;
-
 }

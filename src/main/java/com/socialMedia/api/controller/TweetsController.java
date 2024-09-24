@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.socialMedia.business.abstracts.TweetService;
 import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.SuccessResponse;
+import com.socialMedia.dtos.tweet.CreateRetweetRequest;
 import com.socialMedia.dtos.tweet.CreateTweetDTO;
+import com.socialMedia.dtos.tweet.DeleteRetweetRequest;
 import com.socialMedia.dtos.tweet.DeleteTweetRequest;
 import com.socialMedia.dtos.tweet.GetAllTweetResponse;
 import com.socialMedia.dtos.tweet.UpdateTweetDTO;
@@ -41,6 +43,18 @@ public class TweetsController {
 	@PutMapping("/update")
 	public SuccessResponse update(@Valid @RequestBody UpdateTweetDTO request, Principal principal) {
 		tweetService.update(request, principal.getName());
+		return new SuccessResponse();
+	}
+	
+	@PostMapping("/retweet")
+	public SuccessResponse retweet(@RequestBody CreateRetweetRequest request) {
+		tweetService.retweet(request);
+		return new SuccessResponse();
+	}
+	
+	@PostMapping("/undoretweet")
+	public SuccessResponse undoRetweet(@RequestBody DeleteRetweetRequest request) {
+		tweetService.undoRetweet(request);
 		return new SuccessResponse();
 	}
 

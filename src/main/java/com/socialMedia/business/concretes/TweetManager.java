@@ -13,12 +13,15 @@ import com.socialMedia.business.abstracts.TweetService;
 import com.socialMedia.business.abstracts.TweetVideosService;
 import com.socialMedia.business.abstracts.UserTweetService;
 import com.socialMedia.business.rules.tweet.TweetBusinessRules;
+import com.socialMedia.core.utilities.AuthenticatedUser;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
 import com.socialMedia.dataAccess.TweetRepository;
 import com.socialMedia.dtos.PageResponse;
+import com.socialMedia.dtos.tweet.CreateRetweetRequest;
 import com.socialMedia.dtos.tweet.CreateTweetDTO;
+import com.socialMedia.dtos.tweet.DeleteRetweetRequest;
 import com.socialMedia.dtos.tweet.DeleteTweetRequest;
 import com.socialMedia.dtos.tweet.GetAllTweetResponse;
 import com.socialMedia.dtos.tweet.UpdateTweetDTO;
@@ -97,6 +100,32 @@ public class TweetManager implements TweetService {
 		if (request.getTweetVideos() != null && !request.getTweetVideos().isEmpty())
 			tweetVideosService.update(request.getTweetVideos());
 
+		return tweet;
+	}
+	
+	@Override
+	public Tweet retweet(CreateRetweetRequest request) {
+		User user = AuthenticatedUser.getCurrentUser();
+		Tweet tweet = getTweet(request.getTweetId());
+
+		if (tweetBusinessRules.checkIfUserRetweeted(user, tweet))
+			throw new BusinessException(Messages.THIS_TWEET_ALREADY_RETWEETED);
+
+		tweet.getUserRetweets().add(user);
+		tweetRepository.save(tweet);
+		return tweet;
+	}
+	
+	@Override
+	public Tweet undoRetweet(DeleteRetweetRequest request) {
+		User user = AuthenticatedUser.getCurrentUser();
+		Tweet tweet = getTweet(request.getTweetId());
+		
+		if (!tweetBusinessRules.checkIfUserRetweeted(user, tweet))
+			throw new BusinessException(Messages.THIS_TWEET_DOES_NOT_RETWEETED);
+		
+		tweet.getUserRetweets().remove(user);
+		tweetRepository.save(tweet);
 		return tweet;
 	}
 

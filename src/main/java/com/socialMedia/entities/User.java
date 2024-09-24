@@ -95,12 +95,11 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "creatorUser")
 	private List<Survey> creatorUsers;
 
-//	@OneToMany(mappedBy = "evaluatingUser")
-//	private List<Survey> evaluatingUsers;
-
 	@ManyToMany
 	@JoinTable(name = "blocked_ones", joinColumns = { @JoinColumn(name = "obstructive_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "blocked_id") })
 	private List<User> blockedUsers;
 
+	@OneToMany(mappedBy = "user")
+	private List<TweetQuote> tweetQuote;
 }

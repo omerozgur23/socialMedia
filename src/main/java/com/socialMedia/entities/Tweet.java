@@ -50,10 +50,15 @@ public class Tweet {
 	private List<User> userLikes;
 
 	@ManyToMany
-	@JoinTable(name = "retweets", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tweet_id"))
+	@JoinTable(name = "retweets", joinColumns = @JoinColumn(name = "tweet_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<User> userRetweets;
 
 	@OneToMany(mappedBy = "tweet")
 	private List<Comment> tweetComment;
-
+	
+	@OneToMany(mappedBy = "tweet")
+	private List<TweetQuote> tweet;
+	
+	@OneToMany(mappedBy = "tweetQuote")
+	private List<TweetQuote> tweetQuote;
 }

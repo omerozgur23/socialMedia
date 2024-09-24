@@ -42,8 +42,19 @@ public class LikeManager implements LikeService {
 	public void tweetLike(CreateTweetLikeRequest request) {
 		User currentUser = AuthenticatedUser.getCurrentUser();
 		Tweet tweet = tweetService.getTweet(request.getTweetId());
-		tweetLikeBusinessRules.validateIfUserLikeTweet(currentUser, tweet);
+		
+		if (tweetLikeBusinessRules.validateIfUserLikeTweet(currentUser, tweet)) {
+			tweetUnlike(currentUser, tweet);
+			return;
+		}
+
 		tweet.getUserLikes().add(currentUser);
+		tweetRepository.save(tweet);
+	}
+
+	@Override
+	public void tweetUnlike(User user, Tweet tweet) {
+		tweet.getUserLikes().remove(user);
 		tweetRepository.save(tweet);
 	}
 
@@ -51,8 +62,19 @@ public class LikeManager implements LikeService {
 	public void commentLike(CreateCommentLikeRequest request) {
 		User currentUser = AuthenticatedUser.getCurrentUser();
 		Comment comment = commentService.getComment(request.getCommentId());
-		commentLikeBusinessRules.validateIfUserLikeComment(currentUser, comment);
+		
+		if (commentLikeBusinessRules.validateIfUserLikeComment(currentUser, comment)) {
+			commentUnlike(currentUser, comment);
+			return;
+		}
+		
 		comment.getUserCommentLikes().add(currentUser);
+		commentRepository.save(comment);
+	}
+	
+	@Override
+	public void commentUnlike(User user, Comment comment) {
+		comment.getUserCommentLikes().remove(user);
 		commentRepository.save(comment);
 	}
 }

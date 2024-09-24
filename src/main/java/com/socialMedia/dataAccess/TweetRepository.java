@@ -9,5 +9,5 @@ import com.socialMedia.entities.Tweet;
 
 @Repository
 public interface TweetRepository extends JpaRepository<Tweet, UUID> {
-
+	
 }

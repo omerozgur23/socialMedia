@@ -38,6 +38,10 @@ public record Messages() {
 	public static final String TWEET_VIDEO_NOT_FOUND_WITH_TWEET_ID = "Tweet Video not found with tweet ID: ";
 	public static final String YOU_HAVE_EXISTIS_EXCEEDED_THE_CHARACTER_LIMIT_280 = "You have existis exceeded the character limit (max=280)";
 	public static final String YOU_HAVE_EXISTIS_EXCEEDED_THE_CHARACTER_LIMIT_200 = "You have existis exceeded the character limit (max=200)";
+	
+	// Retweet Messages
+	public static final String THIS_TWEET_ALREADY_RETWEETED = "This tweet already retweeted";
+	public static final String THIS_TWEET_DOES_NOT_RETWEETED = "This tweet doesn't retweeted";
 
 	// Like Messages
 	public static final String TWEET_IS_ALREADY_LIKED = "Tweet is already liked";
