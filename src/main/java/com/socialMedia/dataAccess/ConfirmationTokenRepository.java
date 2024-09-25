@@ -26,4 +26,6 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
 
 	@Query("SELECT c FROM ConfirmationToken c WHERE c.confirmedAt IS NULL AND c.expiresAt < CURRENT_TIMESTAMP")
 	List<ConfirmationToken> findExpiredTokens();
+
+	List<ConfirmationToken> findByUserIdIn(List<UUID> usersId);
 }

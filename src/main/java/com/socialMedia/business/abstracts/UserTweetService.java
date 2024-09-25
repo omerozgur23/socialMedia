@@ -15,7 +15,7 @@ public interface UserTweetService {
 
 	void userTweetSoftDelete(UUID tweetId);
 
-	void userTweetAdd(User user, Tweet tweet);
+	UserTweet userTweetAdd(User user, Tweet tweet);
 
 	List<UserTweet> getUserTweets(List<UUID> usersId);
 

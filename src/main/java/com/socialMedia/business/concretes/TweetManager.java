@@ -67,8 +67,8 @@ public class TweetManager implements TweetService {
 
 	@Transactional
 	@Override
-	public Tweet create(CreateTweetDTO request, String currentUserEmail) {
-		User user = tweetBusinessRules.getCurrentUser(currentUserEmail);
+	public Tweet create(CreateTweetDTO request) {
+		User user = AuthenticatedUser.getCurrentUser();
 		Tweet tweet = modelMapper.forRequest().map(request.getTweetRequest(), Tweet.class);
 		tweet.setCreatedDate(LocalDateTime.now());
 		tweetRepository.save(tweet);
@@ -102,7 +102,7 @@ public class TweetManager implements TweetService {
 
 		return tweet;
 	}
-	
+
 	@Override
 	public Tweet retweet(CreateRetweetRequest request) {
 		User user = AuthenticatedUser.getCurrentUser();
@@ -115,15 +115,15 @@ public class TweetManager implements TweetService {
 		tweetRepository.save(tweet);
 		return tweet;
 	}
-	
+
 	@Override
 	public Tweet undoRetweet(DeleteRetweetRequest request) {
 		User user = AuthenticatedUser.getCurrentUser();
 		Tweet tweet = getTweet(request.getTweetId());
-		
+
 		if (!tweetBusinessRules.checkIfUserRetweeted(user, tweet))
 			throw new BusinessException(Messages.THIS_TWEET_DOES_NOT_RETWEETED);
-		
+
 		tweet.getUserRetweets().remove(user);
 		tweetRepository.save(tweet);
 		return tweet;
@@ -145,4 +145,5 @@ public class TweetManager implements TweetService {
 				.toList();
 		tweetRepository.deleteAll(tweets);
 	}
+
 }

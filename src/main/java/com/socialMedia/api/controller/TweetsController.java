@@ -35,8 +35,8 @@ public class TweetsController {
 	}
 
 	@PostMapping("/create")
-	public SuccessResponse create(@Valid @RequestBody CreateTweetDTO request, Principal principal) {
-		tweetService.create(request, principal.getName());
+	public SuccessResponse create(@Valid @RequestBody CreateTweetDTO request) {
+		tweetService.create(request);
 		return new SuccessResponse();
 	}
 
@@ -45,13 +45,13 @@ public class TweetsController {
 		tweetService.update(request, principal.getName());
 		return new SuccessResponse();
 	}
-	
+
 	@PostMapping("/retweet")
 	public SuccessResponse retweet(@RequestBody CreateRetweetRequest request) {
 		tweetService.retweet(request);
 		return new SuccessResponse();
 	}
-	
+
 	@PostMapping("/undoretweet")
 	public SuccessResponse undoRetweet(@RequestBody DeleteRetweetRequest request) {
 		tweetService.undoRetweet(request);

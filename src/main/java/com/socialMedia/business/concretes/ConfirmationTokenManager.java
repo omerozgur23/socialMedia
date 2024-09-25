@@ -58,4 +58,11 @@ public class ConfirmationTokenManager implements ConfirmationTokenService {
 		return confirmationTokenRepository.findByToken(token)
 				.orElseThrow(() -> new BusinessException(Messages.TOKEN_NOT_FOUND));
 	}
+
+	@Override
+	public void deleteManuelly(List<UUID> usersId) {
+		List<ConfirmationToken> confirmationTokens = confirmationTokenRepository.findByUserIdIn(usersId);
+		confirmationTokenRepository.deleteAll(confirmationTokens);
+
+	}
 }

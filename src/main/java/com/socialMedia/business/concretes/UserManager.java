@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.socialMedia.business.abstracts.ConfirmationTokenService;
 import com.socialMedia.business.abstracts.TweetImagesService;
+import com.socialMedia.business.abstracts.TweetQuoteService;
 import com.socialMedia.business.abstracts.TweetService;
 import com.socialMedia.business.abstracts.TweetVideosService;
 import com.socialMedia.business.abstracts.UserService;
@@ -65,6 +66,9 @@ public class UserManager implements UserService {
 	private TweetVideosService tweetVideosService;
 
 	@Autowired
+	private TweetQuoteService tweetQuoteService;
+
+	@Autowired
 	private TweetService tweetService;
 
 	@Autowired
@@ -77,13 +81,6 @@ public class UserManager implements UserService {
 	public User getUser(UUID id) {
 		return userRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
 	}
-
-//	@Override
-//	public User getCurrentUser() {
-//		String currentUserEmail = AuthenticatedUser.getCurrentUser();
-//		return userRepository.findByEmail(currentUserEmail)
-//				.orElseThrow(() -> new BusinessException(Messages.USER_NOT_FOUND));
-//	}
 
 	@Override
 	public PageResponse<GetAllUserResponse> getAll() {
@@ -138,16 +135,18 @@ public class UserManager implements UserService {
 
 	@Transactional
 	@Override
-	@Scheduled(cron = "0 0 0 1 * ?")
+	@Scheduled(cron = "0 * * * * ?")
 	public void hardDelete() {
-		LocalDateTime cutOffTime = LocalDateTime.now().minusDays(32);
+		LocalDateTime cutOffTime = LocalDateTime.now().minusMinutes(1);
 
 		List<UUID> passiveUsersId = userRepository.findByStatus(cutOffTime);
 		List<UUID> userTweetsId = userTweetService.delete(passiveUsersId);
 
+		tweetQuoteService.deleteQuote(passiveUsersId);
 		tweetImagesService.delete(userTweetsId);
 		tweetVideosService.delete(userTweetsId);
 		tweetService.hardDelete(userTweetsId);
+		confirmationTokenService.deleteManuelly(passiveUsersId);
 
 		userRepository.hardDelete(cutOffTime);
 	}

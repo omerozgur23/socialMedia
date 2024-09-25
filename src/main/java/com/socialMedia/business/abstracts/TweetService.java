@@ -18,15 +18,16 @@ public interface TweetService {
 
 	Tweet getTweet(UUID id);
 
-	Tweet create(CreateTweetDTO request, String currentUser);
+	Tweet create(CreateTweetDTO request);
 
 	Tweet update(UpdateTweetDTO request, String currentUser);
-	
+
 	Tweet retweet(CreateRetweetRequest request);
-	
+
 	Tweet undoRetweet(DeleteRetweetRequest request);
 
 	void softDelete(DeleteTweetRequest request);
 
 	void hardDelete(List<UUID> tweetsId);
+
 }
