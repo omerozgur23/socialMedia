@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,26 +18,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "tweet_quotes")
+@Builder
 public class TweetQuote {
-	
+
 	@Id
 	@GeneratedValue
 	private UUID id;
-	
+
 //	private String text;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "tweet_id")
 	private Tweet tweet;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "tweet_quote_id")
 	private Tweet tweetQuote;
-	
+
 //	@OneToMany(mappedBy = "tweetQuote")
 //	private List<TweetQuoteImage> tweetQuoteImages;
 //

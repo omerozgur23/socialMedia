@@ -46,9 +46,10 @@ public class UserTweetManager implements UserTweetService {
 	}
 
 	@Override
-	public void userTweetAdd(User user, Tweet tweet) {
+	public UserTweet userTweetAdd(User user, Tweet tweet) {
 		UserTweet userTweet = UserTweet.builder().user(user).tweet(tweet).build();
 		userTweetRepository.save(userTweet);
+		return userTweet;
 	}
 
 	@Override
