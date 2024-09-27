@@ -54,7 +54,7 @@ public class Tweet {
 	private List<User> userRetweets;
 
 	@OneToMany(mappedBy = "tweet")
-	private List<Comment> tweetComment;
+	private List<TweetComment> tweetComment;
 	
 	@OneToMany(mappedBy = "tweet")
 	private List<TweetQuote> tweet;

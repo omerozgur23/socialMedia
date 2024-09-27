@@ -38,7 +38,7 @@ public record Messages() {
 	public static final String TWEET_VIDEO_NOT_FOUND_WITH_TWEET_ID = "Tweet Video not found with tweet ID: ";
 	public static final String YOU_HAVE_EXISTIS_EXCEEDED_THE_CHARACTER_LIMIT_280 = "You have existis exceeded the character limit (max=280)";
 	public static final String YOU_HAVE_EXISTIS_EXCEEDED_THE_CHARACTER_LIMIT_200 = "You have existis exceeded the character limit (max=200)";
-	
+
 	// Retweet Messages
 	public static final String THIS_TWEET_ALREADY_RETWEETED = "This tweet already retweeted";
 	public static final String THIS_TWEET_DOES_NOT_RETWEETED = "This tweet doesn't retweeted";
@@ -92,5 +92,8 @@ public record Messages() {
 	public static final String COMMENT_CANNOT_BE_BLANK = "Comment cannot be blank";
 	public static final String TWEET_ID_CANNOT_BE_NULL_IN_COMMENT = "Tweet ID cannot be null in comment";
 	public static final String YOU_HAVE_EXISTIS_EXCEEDED_THE_COMMENT_CHARACTER_LIMIT_280 = "You have existis exceeded the character limit (max=280)";
+
+	// Comment Like Messages
+	public static final String USER_IS_COMMENT_LIKES_NOT_FOUND = "User's comment likes not found";
 
 }

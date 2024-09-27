@@ -12,32 +12,32 @@ import com.socialMedia.core.utilities.AuthenticatedUser;
 import com.socialMedia.core.utilities.config.mapper.ModelMapperService;
 import com.socialMedia.core.utilities.exceptions.BusinessException;
 import com.socialMedia.core.utilities.exceptions.Messages;
-import com.socialMedia.dataAccess.CommentRepository;
+import com.socialMedia.dataAccess.TweetCommentRepository;
 import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.comment.CreateCommentRequest;
 import com.socialMedia.dtos.comment.DeleteCommentRequest;
 import com.socialMedia.dtos.comment.GetAllCommentResponse;
-import com.socialMedia.entities.Comment;
+import com.socialMedia.entities.TweetComment;
 import com.socialMedia.entities.User;
 
 @Service
 public class CommentManager implements CommentService {
 
 	@Autowired
-	private CommentRepository commentRepository;
+	private TweetCommentRepository commentRepository;
 
 	@Autowired
 	private ModelMapperService modelMapper;
 
 	@Override
-	public Comment getComment(UUID id) {
+	public TweetComment getComment(UUID id) {
 		return commentRepository.findById(id).orElseThrow(() -> new BusinessException(Messages.COMMENT_NOT_FOUND + id));
 	}
 
 	@Override
 	public PageResponse<GetAllCommentResponse> getCommentsByUserId() {
 		User currentUser = AuthenticatedUser.getCurrentUser();
-		List<Comment> comments = commentRepository.findByUserId(currentUser.getId());
+		List<TweetComment> comments = commentRepository.findByUserId(currentUser.getId());
 		List<GetAllCommentResponse> response = comments.stream()
 				.map(comment -> modelMapper.forResponse().map(comment, GetAllCommentResponse.class)).toList();
 		int count = response.size();
@@ -47,7 +47,7 @@ public class CommentManager implements CommentService {
 	@Override
 	public void create(CreateCommentRequest request) {
 		User currentUser = AuthenticatedUser.getCurrentUser();
-		Comment comment = modelMapper.forRequest().map(request, Comment.class);
+		TweetComment comment = modelMapper.forRequest().map(request, TweetComment.class);
 		comment.setCreatedDate(LocalDateTime.now());
 		comment.setUser(currentUser);
 		commentRepository.save(comment);
@@ -55,7 +55,7 @@ public class CommentManager implements CommentService {
 
 	@Override
 	public void delete(DeleteCommentRequest request) {
-		Comment comment = getComment(request.getId());
+		TweetComment comment = getComment(request.getId());
 		commentRepository.delete(comment);
 	}
 }

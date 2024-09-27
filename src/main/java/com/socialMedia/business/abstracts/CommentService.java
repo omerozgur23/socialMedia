@@ -6,11 +6,11 @@ import com.socialMedia.dtos.PageResponse;
 import com.socialMedia.dtos.comment.CreateCommentRequest;
 import com.socialMedia.dtos.comment.DeleteCommentRequest;
 import com.socialMedia.dtos.comment.GetAllCommentResponse;
-import com.socialMedia.entities.Comment;
+import com.socialMedia.entities.TweetComment;
 
 public interface CommentService {
 
-	Comment getComment(UUID id);
+	TweetComment getComment(UUID id);
 
 	PageResponse<GetAllCommentResponse> getCommentsByUserId();
 

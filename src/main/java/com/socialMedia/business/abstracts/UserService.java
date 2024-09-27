@@ -18,8 +18,6 @@ public interface UserService {
 
 	User getUser(UUID id);
 
-//	User getCurrentUser();
-
 	PageResponse<GetAllUserResponse> getAll();
 
 	User create(SignUpRequest request);
