@@ -70,10 +70,13 @@ public class User implements Serializable {
 	private List<Tweet> retweets;
 
 	@OneToMany(mappedBy = "user")
-	private List<Comment> userComment;
+	private List<TweetComment> userTweetComment;
 
 	@ManyToMany(mappedBy = "userCommentLikes")
-	private List<Comment> commentLikes;
+	private List<TweetComment> commentLikes;
+	
+	@OneToMany(mappedBy = "user")
+	private List<CommentReply> commentReplies;
 
 	@OneToMany(mappedBy = "sendingUser")
 	private List<Message> sendMessages;
@@ -83,6 +86,7 @@ public class User implements Serializable {
 
 	@OneToMany(mappedBy = "user")
 	private List<SurveyAnswer> surveyAnswers;
+	
 
 	@ManyToMany
 	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "follower_user_id") }, inverseJoinColumns = {

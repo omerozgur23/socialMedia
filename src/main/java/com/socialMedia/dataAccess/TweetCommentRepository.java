@@ -6,10 +6,10 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.socialMedia.entities.Comment;
+import com.socialMedia.entities.TweetComment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, UUID> {
+public interface TweetCommentRepository extends JpaRepository<TweetComment, UUID> {
 
-	List<Comment> findByUserId(UUID userId);
+	List<TweetComment> findByUserId(UUID userId);
 }

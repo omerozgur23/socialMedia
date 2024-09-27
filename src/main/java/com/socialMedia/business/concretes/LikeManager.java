@@ -9,12 +9,12 @@ import com.socialMedia.business.abstracts.TweetService;
 import com.socialMedia.business.rules.like.CommentLikeBusinessRules;
 import com.socialMedia.business.rules.like.TweetLikeBusinessRules;
 import com.socialMedia.core.utilities.AuthenticatedUser;
-import com.socialMedia.dataAccess.CommentRepository;
+import com.socialMedia.dataAccess.TweetCommentRepository;
 import com.socialMedia.dataAccess.TweetRepository;
 import com.socialMedia.dtos.like.CreateCommentLikeRequest;
 import com.socialMedia.dtos.like.CreateTweetLikeRequest;
-import com.socialMedia.entities.Comment;
 import com.socialMedia.entities.Tweet;
+import com.socialMedia.entities.TweetComment;
 import com.socialMedia.entities.User;
 
 @Service
@@ -30,7 +30,7 @@ public class LikeManager implements LikeService {
 	private TweetRepository tweetRepository;
 
 	@Autowired
-	private CommentRepository commentRepository;
+	private TweetCommentRepository commentRepository;
 
 	@Autowired
 	private TweetService tweetService;
@@ -42,7 +42,7 @@ public class LikeManager implements LikeService {
 	public void tweetLike(CreateTweetLikeRequest request) {
 		User currentUser = AuthenticatedUser.getCurrentUser();
 		Tweet tweet = tweetService.getTweet(request.getTweetId());
-		
+
 		if (tweetLikeBusinessRules.validateIfUserLikeTweet(currentUser, tweet)) {
 			tweetUnlike(currentUser, tweet);
 			return;
@@ -61,20 +61,20 @@ public class LikeManager implements LikeService {
 	@Override
 	public void commentLike(CreateCommentLikeRequest request) {
 		User currentUser = AuthenticatedUser.getCurrentUser();
-		Comment comment = commentService.getComment(request.getCommentId());
-		
+		TweetComment comment = commentService.getComment(request.getCommentId());
+
 		if (commentLikeBusinessRules.validateIfUserLikeComment(currentUser, comment)) {
 			commentUnlike(currentUser, comment);
 			return;
 		}
-		
+
 		comment.getUserCommentLikes().add(currentUser);
 		commentRepository.save(comment);
 	}
-	
+
 	@Override
-	public void commentUnlike(User user, Comment comment) {
-		comment.getUserCommentLikes().remove(user);
+	public void commentUnlike(User user, TweetComment comment) {
+		comment.getCommentLikes().remove(user);
 		commentRepository.save(comment);
 	}
 }

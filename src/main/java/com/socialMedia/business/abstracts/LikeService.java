@@ -2,7 +2,7 @@ package com.socialMedia.business.abstracts;
 
 import com.socialMedia.dtos.like.CreateCommentLikeRequest;
 import com.socialMedia.dtos.like.CreateTweetLikeRequest;
-import com.socialMedia.entities.Comment;
+import com.socialMedia.entities.TweetComment;
 import com.socialMedia.entities.Tweet;
 import com.socialMedia.entities.User;
 
@@ -14,5 +14,5 @@ public interface LikeService {
 
 	void commentLike(CreateCommentLikeRequest request);
 	
-	void commentUnlike(User user, Comment comment);
+	void commentUnlike(User user, TweetComment comment);
 }
